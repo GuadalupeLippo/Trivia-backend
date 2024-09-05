@@ -1,4 +1,4 @@
-import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, JoinColumn, PrimaryGeneratedColumn } from "typeorm";
 
 
 @Entity()
@@ -9,6 +9,6 @@ id: number;
 @Column()
 description: string;
 @Column()
-category:string;
+category:string 
 
 }
