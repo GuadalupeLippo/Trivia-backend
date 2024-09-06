@@ -4,6 +4,7 @@ import { BuyAvatarController } from './buyAvatar.controller';
 import { DatabaseModule } from 'src/database/database.module';
 import { buyAvatarProviders } from './buyAvatar.providers';
 import { avatarProviders } from 'src/avatars/avatars.providers';
+import { playerProviders } from 'src/player/player.providers';
 
 @Module({
   imports: [DatabaseModule],
@@ -11,6 +12,7 @@ import { avatarProviders } from 'src/avatars/avatars.providers';
   providers: [
     ...buyAvatarProviders,
     ...avatarProviders,
+    ...playerProviders,
     BuyAvatarService,
   ],
 })
