@@ -1,4 +1,5 @@
-import { Column, Entity, JoinColumn, PrimaryGeneratedColumn } from "typeorm";
+import { TipoDificult } from "src/tipo-dificult/entities/tipo-dificult.entity";
+import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 
 
 @Entity()
@@ -10,5 +11,7 @@ id: number;
 description: string;
 @Column()
 category:string 
-
+   
+@ManyToOne(() => TipoDificult, (tipoDificult) => tipoDificult.questions, { eager: true })
+tipodificult: TipoDificult ;
 }
