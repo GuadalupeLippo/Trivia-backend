@@ -1,4 +1,5 @@
-import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { Question } from "src/questions/entities/question.entity";
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 
 
 @Entity()
@@ -13,4 +14,6 @@ export class TipoDificult {
     duracion:number;
     @Column()
     preguntas : string;
+    @OneToMany(() => Question, (question) => question.tipodificult)
+questions:Question[]
 }
