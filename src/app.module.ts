@@ -11,6 +11,7 @@ import { UserModule } from './user/user.module';
 import { PlayerModule } from './player/player.module';
 import { ScoreModule } from './score/score.module';
 import { BuyScoreModule } from './buy-score/buy-score.module';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -21,7 +22,7 @@ import { BuyScoreModule } from './buy-score/buy-score.module';
     QuestionsModule, 
     TipoDificultModule, 
     UserModule, 
-    PlayerModule, ScoreModule, BuyScoreModule
+    PlayerModule, ScoreModule, BuyScoreModule, AuthModule
   ],
 });
 
