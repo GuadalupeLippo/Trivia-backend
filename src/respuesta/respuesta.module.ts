@@ -3,7 +3,7 @@ import { RespuestaService } from './respuesta.service';
 import { RespuestaController } from './respuesta.controller';
 
 @Module({
-imports: [  // Elimina o comenta la l%C3%ADnea conflictiva si no quieres la importaci%C3%B3n de TypeOrmModule.forFeature  // TypeOrmModule.forFeature([Respuesta, Question, Categoria]),],
+imports: [  // TypeOrmModule.forFeature([Respuesta, Question, Categoria]), // Esta l%C3%ADnea est%C3%A1 comentada en master, puedes ajustarla si es necesario.],
   controllers: [RespuestaController],
   providers: [RespuestaService],
 })
