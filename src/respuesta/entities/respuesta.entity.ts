@@ -1,6 +1,6 @@
 import { Entity, Column, PrimaryGeneratedColumn, ManyToOne } from 'typeorm';
-import { Pregunta } from 'src/pregunta/pregunta.entity';
-import { Categoria } from 'src/categoria/categoria.entity';
+import { Question } from 'src/questions/entities/question.entity';
+import { Categoria } from 'src/categoria/entities/categoria.entity';
 
 @Entity()
 export class Respuesta {
@@ -13,8 +13,8 @@ export class Respuesta {
   @Column({ type: 'boolean' })
   valor: boolean;
 
-  @ManyToOne(() => Pregunta, pregunta => pregunta.respuestas)
-  pregunta: Pregunta;
+  @ManyToOne(() => Question, question => question.respuestas)
+  pregunta: Question;
 
   @ManyToOne(() => Categoria, categoria => categoria.respuestas, { nullable: true })
   categoria: Categoria;
