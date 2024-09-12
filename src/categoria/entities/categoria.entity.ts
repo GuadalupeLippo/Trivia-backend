@@ -1,13 +1,14 @@
-import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, OneToMany } from 'typeorm';
+import { Respuesta } from 'src/respuesta/entities/respuesta.entity';
 
 @Entity()
 export class Categoria {
   @PrimaryGeneratedColumn()
-  idCategoria: number;
+  id_categoria: number;
 
   @Column()
-  tipo: string;
+  nombre: string;
 
-  @Column({ nullable: true }) 
-  logo: string;
+  @OneToMany(() => Respuesta, respuesta => respuesta.categoria)
+  respuestas: Respuesta[];
 }
