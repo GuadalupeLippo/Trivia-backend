@@ -10,6 +10,7 @@ import { TipoDificultModule } from './tipo-dificult/tipo-dificult.module';
 import { UserModule } from './user/user.module';
 import { PlayerModule } from './player/player.module';
 import { ScoreModule } from './score/score.module';
+import { BuyScoreModule } from './buy-score/buy-score.module';
 
 @Module({
   imports: [
@@ -20,7 +21,7 @@ import { ScoreModule } from './score/score.module';
     QuestionsModule, 
     TipoDificultModule, 
     UserModule, 
-    PlayerModule, ScoreModule
+    PlayerModule, ScoreModule, BuyScoreModule
   ],
 });
 
