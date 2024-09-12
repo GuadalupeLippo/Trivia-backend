@@ -4,14 +4,6 @@ export class CreatePlayerDto {
     @IsInt()
     userId : number;
 
-    @IsNumber()
-    @IsInt()
-    score: number;
-
-    @IsNumber()
-    @IsInt()
-    games: number;
-
     @IsInt()
     buyAvatarId : number;
 

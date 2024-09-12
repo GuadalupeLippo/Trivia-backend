@@ -8,7 +8,7 @@ export class Player {
     @PrimaryGeneratedColumn()
     id : number;
 
-    @Column('int')
+    @Column({type: 'int', default: 0})
     score: number;
 
     @Column('int')
