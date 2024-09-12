@@ -1,6 +1,6 @@
 import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
 
-@Entity()
+@Entity('users')
 export class User {
     @PrimaryGeneratedColumn()
     id : number;
@@ -8,12 +8,13 @@ export class User {
     @Column({length: 100})
     name: string;
 
-    @Column({length: 100})
+    @Column('varchar', {length: 100, unique: true})
     email: string;
 
-    @Column()
+    @Column('varchar', {length: 60})
     password: string;
 
-    @Column()
+    @Column({default: "https://api.dicebear.com/9.x/bottts/svg?seed=Lilly"
+    })
     defaultAvatar: string;
 }
