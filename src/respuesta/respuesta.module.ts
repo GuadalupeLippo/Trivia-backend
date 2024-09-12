@@ -8,10 +8,7 @@ import { RespuestaService } from './respuesta.service';
 import { RespuestaController } from './respuesta.controller';
 
 @Module({
-  imports: [
-    TypeOrmModule.forFeature([Respuesta, Question, Categoria]),
-    
-  ],
+imports: [  TypeOrmModule.forFeature([Respuesta, Question, Categoria]),],
   controllers: [RespuestaController],
   providers: [RespuestaService],
 })
