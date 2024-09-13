@@ -9,6 +9,7 @@ export class Categoria {
   @Column()
   nombre: string;
 
-  @OneToMany(() => Respuesta, respuesta => respuesta.categoria)
-  respuestas: Respuesta[];
+  //aca va relacion con preguntas de una a muchas
+
+
 }
