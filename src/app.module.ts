@@ -1,8 +1,6 @@
 import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { RespuestaModule } from './respuesta/respuesta.module';
-import { CategoriaModule } from './categoria/categoria.module';
 import { AvatarsModule } from './avatars/avatars.module';
 import { BuyAvatarModule } from './buy-avatar/buyAvatar.module';
 import { QuestionsModule } from './questions/questions.module';
@@ -16,9 +14,7 @@ import { AnswerModule } from './answer/answer.module';
 
 
 @Module({
-  imports: [
-    RespuestaModule, 
-    CategoriaModule, 
+  imports: [ 
     AvatarsModule, 
     BuyAvatarModule, 
     QuestionsModule, 
@@ -27,10 +23,11 @@ import { AnswerModule } from './answer/answer.module';
 
     PlayerModule, ScoreModule, BuyScoreModule, AuthModule, AnswerModule
 
-  ],
-});
+  ], 
+ 
 
-  controllers: [AppController],
-  providers: [AppService],
-})
+controllers: [AppController],
+  providers: [AppService]
+ 
+} )
 export class AppModule {}

@@ -1,5 +1,4 @@
 import { TipoDificult } from "src/tipo-dificult/entities/tipo-dificult.entity";
-import { Respuesta } from "src/respuesta/entities/respuesta.entity";
 import { Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 
 
