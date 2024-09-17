@@ -14,6 +14,7 @@ import { BuyScoreModule } from './buy-score/buy-score.module';
 import { AuthModule } from './auth/auth.module';
 import { AnswerModule } from './answer/answer.module';
 
+
 @Module({
   imports: [
     RespuestaModule, 
@@ -23,7 +24,9 @@ import { AnswerModule } from './answer/answer.module';
     QuestionsModule, 
     TipoDificultModule, 
     UserModule, 
+
     PlayerModule, ScoreModule, BuyScoreModule, AuthModule, AnswerModule
+
   ],
 });
 
