@@ -1,4 +1,5 @@
 import { Difficulty } from "src/difficulty/entities/difficulty.entity";
+import { Game } from "src/games/entities/game.entity";
 import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 
 
@@ -18,6 +19,8 @@ export class Question {
   @ManyToOne(() => Difficulty, (tipoDificult) => tipoDificult.questions, { eager: true })
   tipodificult: Difficulty;
 
+  @ManyToOne(() => Game, game => game.id, { eager: true })
+  game: Game;
 
 
 }
