@@ -1,3 +1,4 @@
+import { Game } from 'src/games/entities/game.entity';
 import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from 'typeorm';
 
 
@@ -12,4 +13,7 @@ export class Answer {
   @Column()
   valor: boolean;  // Un valor booleano para "true" o "false"
 
+  //relacion respuestas a partidas : muchas respuestas van a tener una partida.
+  @ManyToOne(() => Game, game => game.id, { eager: true })
+    game: Game;
 }

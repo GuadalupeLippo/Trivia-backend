@@ -14,11 +14,11 @@ import { LoginDto } from './dto/login.dto';
 export class AuthService {
     @Inject(userRepository)
     private userRepository : Repository<User>;
-    constructor (private readonly hashServise : HashService) {};
+    constructor (private readonly hashService : HashService) {};
 
 
     async register(createUserDto : CreateUserDto) {
-        const securePassword = await this.hashServise.hashPassword(createUserDto.password)
+        const securePassword = await this.hashService.hashPassword(createUserDto.password)
         try {
             const newUser = this.userRepository.create({
                 ...createUserDto,
@@ -38,7 +38,7 @@ export class AuthService {
            
         });
         if(!user) throw new UnauthorizedException('Invalid Email or Password');
-        const isAuthenticated = await this.hashServise.comparePassword(loginDto.password,user.password);
+        const isAuthenticated = await this.hashService.comparePassword(loginDto.password,user.password);
         if(!isAuthenticated) throw new UnauthorizedException('Invalid password');
 
         const{password, id, ...rest} = user
