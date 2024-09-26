@@ -1,6 +1,7 @@
+import { Answer } from "src/answer/entities/answer.entity";
 import { Difficulty } from "src/difficulty/entities/difficulty.entity";
 import { Game } from "src/games/entities/game.entity";
-import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 
 
 @Entity()
@@ -11,8 +12,6 @@ export class Question {
   @Column()
   description: string;
 
-
- //esta seria una relacion muchas a una
   @Column()
   category: string;
 
@@ -21,6 +20,10 @@ export class Question {
 
   @ManyToOne(() => Game, game => game.id, { eager: true })
   game: Game;
+
+  @OneToMany(() => Answer, answer => answer.id, { eager: true} )
+  answer: Answer;
+
 
 
 }
