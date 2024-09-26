@@ -1,4 +1,5 @@
-import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
+import { Game } from 'src/games/entities/game.entity';
+import { Entity, PrimaryGeneratedColumn, Column, OneToOne, } from 'typeorm';
 
 @Entity()
 export class Category {
@@ -10,4 +11,7 @@ export class Category {
 
   @Column()
   logo: string;
+
+  @OneToOne(() => Game, (game) => game.category)
+  game: Game;
 }

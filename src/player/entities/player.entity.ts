@@ -15,9 +15,13 @@ export class Player {
     @Column('int')
     games: number;
 
+    @Column({default: "https://api.dicebear.com/9.x/bottts/svg?seed=Lilly"
+    })
+    defaultAvatar: string;
+
     
-    @OneToOne(() => User)
-    @JoinColumn()  // Esto indica que esta entidad posee la clave foránea
+    @OneToOne(() => User , (user) => user.player)
+    @JoinColumn()  
     user: User;
 
     // Relación uno a muchos con la entidad compra de avatares. Un jugador puede tener muchas compras
