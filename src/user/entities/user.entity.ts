@@ -1,4 +1,5 @@
-import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { Player } from "src/player/entities/player.entity";
+import { Column, Entity, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity('users')
 export class User {
@@ -14,7 +15,8 @@ export class User {
     @Column('varchar', {length: 60})
     password: string;
 
-    @Column({default: "https://api.dicebear.com/9.x/bottts/svg?seed=Lilly"
-    })
-    defaultAvatar: string;
+
+    @OneToOne(() => Player, (player) => player.user)
+    player: Player;
+   
 }
