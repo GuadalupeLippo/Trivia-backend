@@ -14,7 +14,7 @@ export class UserService {
    
   async findAllUsers(): Promise<User[]> {
     const user = await this.userRepository.find()
-    if (!user.length) throw new NotFoundException("No user in database")
+    if (!user) throw new NotFoundException("No user in database")
     return user
   }
 
@@ -22,11 +22,20 @@ export class UserService {
     return `This action returns a #${id} user`;
   }
 
-  update(id: number, updateUserDto: UpdateUserDto) {
-    return `This action updates a #${id} user`;
+  async updateUser(id: number, updateUserDto: UpdateUserDto) {
+    const user = await this.userRepository.preload({
+      id: id,
+      ...updateUserDto
+    })
+    if (!user) throw new NotFoundException(`User with id ${id} not found`)
+    return await this.userRepository.save(user)
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} user`;
+  async removeUser(id: number): Promise<String> {
+    const user = await this.userRepository.findOne({ where: { id } });
+    if (!user) throw new NotFoundException(`User with id ${id} not found`);
+    await this.userRepository.remove(user);
+    return `User with ${id} deleted`
   }
+  
 }

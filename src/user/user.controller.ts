@@ -9,7 +9,7 @@ export class UserController {
 
   @Get()
   async findAllUsers() {
-    return this.userService.findAllUsers();
+    return await this.userService.findAllUsers();
   }
 
   @Get(':id')
@@ -18,12 +18,12 @@ export class UserController {
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
-    return this.userService.update(+id, updateUserDto);
+  async updateUser(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
+    return await this.userService.updateUser(+id, updateUserDto);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.userService.remove(+id);
+  async removeUser(@Param('id') id: string) {
+    return await this.userService.removeUser(+id);
   }
 }

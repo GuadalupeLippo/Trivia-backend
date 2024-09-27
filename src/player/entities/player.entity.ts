@@ -12,9 +12,6 @@ export class Player {
     @Column({type: 'int', default: 0})
     score: number;
 
-    @Column('int')
-    games: number;
-
     @Column({default: "https://api.dicebear.com/9.x/bottts/svg?seed=Lilly"
     })
     defaultAvatar: string;
