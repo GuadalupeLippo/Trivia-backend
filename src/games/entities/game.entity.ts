@@ -14,7 +14,8 @@ export class Game {
     score: number;
 
     //relacion partidas-jugador: muchas partidas pueden tener un mismo jugador.
-    @ManyToOne(() => Player, player => player.id, { eager: true })
+    @ManyToOne(() => Player, player => player.game, { eager: true })
+    @JoinColumn()
     player: Player;
 
     //relacion partida-categoria: una partida va a ser de un tipo de categoria.

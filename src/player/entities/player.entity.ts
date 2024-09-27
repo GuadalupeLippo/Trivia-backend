@@ -20,7 +20,7 @@ export class Player {
     defaultAvatar: string;
 
     
-    @OneToOne(() => User , (user) => user.player)
+    @OneToOne(() => User ,{ eager: true })
     @JoinColumn()  
     user: User;
 
