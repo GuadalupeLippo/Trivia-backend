@@ -1,15 +1,21 @@
-import { Injectable } from '@nestjs/common';
-import { CreateUserDto } from './dto/create-user.dto';
+import { Injectable, Inject, NotFoundException} from '@nestjs/common';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { User } from './entities/user.entity';
+import { userRepository } from 'src/constants/constant';
+import { Repository } from 'typeorm';
 
 @Injectable()
 export class UserService {
-  create(createUserDto: CreateUserDto) {
-    return 'This action adds a new user';
-  }
+  constructor(
+    @Inject(userRepository)
+    private userRepository: Repository<User>,
+  ) {}
 
-  findAll() {
-    return `This action returns all user`;
+   
+  async findAllUsers(): Promise<User[]> {
+    const user = await this.userRepository.find()
+    if (!user.length) throw new NotFoundException("No user in database")
+    return user
   }
 
   findOne(id: number) {
