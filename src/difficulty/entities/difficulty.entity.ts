@@ -6,14 +6,13 @@ import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 export class Difficulty {
     @PrimaryGeneratedColumn()
     id:number;
-    @Column()
-    nivel:number;
-    @Column()
-    numeroPreguntas: number;
-    @Column()
+
+    @Column('varchar', {length: 40})
+    nivel:string;
+  
+    @Column('int')
     duracion:number;
-    @Column()
-    preguntas : string;
+
     @OneToMany(() => Question, (question) => question.tipodificult)
 questions:Question[]
 }
