@@ -44,18 +44,29 @@ export class AuthService {
         }
     }
 
-    async login(loginDto: LoginDto) : Promise <Partial<User>> {
-        const user = await this.userRepository.findOneBy({
-            email : loginDto.email
-           
+    async login(loginDto: LoginDto) : Promise <Partial<Player> & Partial<User>> {
+        
+        const player = await this.playerRepository.findOne({
+            where: {
+                user: {
+                    email: loginDto.email,
+                },
+            },
+            relations: ['user'], 
         });
-        if(!user) throw new UnauthorizedException('Invalid Email or Password');
-        const isAuthenticated = await this.hashService.comparePassword(loginDto.password,user.password);
+        if(!player) throw new UnauthorizedException('Invalid Email');
+
+        const isAuthenticated = await this.hashService.comparePassword(loginDto.password,player.user.password);
         if(!isAuthenticated) throw new UnauthorizedException('Invalid password');
 
-        const{password, id, ...rest} = user
-
-        return rest
+        const { user, ...playerData } = player;
+        const { password, ...userData } = user;
+    
+       
+        return {
+            ...playerData, 
+            ... userData  
+        };
     }
 
 }

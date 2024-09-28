@@ -1,14 +1,14 @@
 import { Body, Controller, Delete, Get, Param, Patch, Post } from '@nestjs/common';
 import { DifficultyService } from './difficulty.service';
-import { CreateDifficultytDto } from './dto/create-tipo-dificult.dto';
-import { UpdateDifficultytDto } from './dto/update-tipo-dificult.dto';
+import { CreateDifficultyDto } from './dto/create-tipo-dificult.dto';
+import { UpdateDifficultyDto } from './dto/update-tipo-dificult.dto';
 
 @Controller('difficulty')
 export class difficultyController {
   constructor(private readonly DifficultyService: DifficultyService) {}
 
   @Post()
-  create(@Body() createTipoDificultDto: CreateDifficultytDto) {
+  create(@Body() createTipoDificultDto: CreateDifficultyDto) {
     return this.DifficultyService.create(createTipoDificultDto);
   }
 
@@ -23,7 +23,7 @@ export class difficultyController {
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateTipoDificultDto: UpdateDifficultytDto) {
+  update(@Param('id') id: string, @Body() updateTipoDificultDto: UpdateDifficultyDto) {
     return this.DifficultyService.update(+id, updateTipoDificultDto);
   }
 
