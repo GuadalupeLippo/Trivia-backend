@@ -13,17 +13,20 @@ export class Question {
   @Column()
   description: string;
 
-   @ManyToOne(() => Difficulty, (tipoDificult) => tipoDificult.questions, { eager: true })
-  tipodificult: Difficulty;
+   @ManyToOne(() => Difficulty, (difficulty) => difficulty.questions)
+  difficulty: Difficulty;
 
-  @ManyToOne(() => Game, game => game.id, { eager: true })
+  @ManyToOne(() => Game, game => game.id)
   game: Game;
 
-  @OneToMany(() => Answer, answer => answer.id, { eager: true} )
+  @OneToMany(() => Answer, answer => answer.id )
   answer: Answer;
 
-  @ManyToOne(() => Category, category => category.id,{ eager: true}  )
+  @ManyToOne(() => Category, category => category.id )
   category: Category;
+
+
+
 
 }
 

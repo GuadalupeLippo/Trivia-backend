@@ -21,8 +21,11 @@ export class QuestionsService {
   }
   
   async findAll(): Promise<Question[]> {
-    const question = await this.questionRepository.find()
-    if(!question) throw new NotAcceptableException("No question in BasedeDatos")
+    const question = await this.questionRepository.find({
+      relations: [],
+    });
+    
+    if(!question || question.length === 0) throw new NotAcceptableException("No question in BasedeDatos")
       return question;
   }
 

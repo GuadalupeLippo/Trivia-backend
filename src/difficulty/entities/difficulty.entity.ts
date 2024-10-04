@@ -13,6 +13,6 @@ export class Difficulty {
     @Column('int')
     duracion:number;
 
-    @OneToMany(() => Question, (question) => question.tipodificult)
+    @OneToMany(() => Question, (question) => question.difficulty)
 questions:Question[]
 }
