@@ -1,11 +1,12 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable , NotFoundException} from '@nestjs/common';
 import { CreateCategoryDto } from './dto/create-category.dto';
 import { UpdateCategoryDto } from './dto/update-category.dto';
+import { Repository } from 'typeorm';
 
 @Injectable()
 export class CategoryService {
   create(createCategoryDto: CreateCategoryDto) {
-    return 'This action adds a new category';
+    return 'This action adds a new Category';
   }
 
   findAll() {
