@@ -2,6 +2,7 @@ import { Column, Entity, PrimaryGeneratedColumn, OneToOne, JoinColumn, OneToMany
 import { User } from "src/user/entities/user.entity";
 import { BuyAvatar } from "src/buy-avatar/entities/buyAvatar.entity";
 import { BuyScore } from "src/buy-score/entities/buy-score.entity";
+import { Game } from "src/games/entities/game.entity";
 
 @Entity()
 export class Player {
@@ -11,12 +12,13 @@ export class Player {
     @Column({type: 'int', default: 0})
     score: number;
 
-    @Column('int')
-    games: number;
+    @Column({default: "https://api.dicebear.com/9.x/bottts/svg?seed=Lilly"
+    })
+    defaultAvatar: string;
 
     
-    @OneToOne(() => User)
-    @JoinColumn()  // Esto indica que esta entidad posee la clave foránea
+    @OneToOne(() => User ,{ eager: true })
+    @JoinColumn()  
     user: User;
 
     // Relación uno a muchos con la entidad compra de avatares. Un jugador puede tener muchas compras
@@ -26,4 +28,8 @@ export class Player {
      // Relación uno a muchos con la entidad compra de puntos. Un jugador puede tener muchas compras
     @OneToMany(() => BuyScore, buyscore  => buyscore.player)
     buyscore: BuyScore [];
+
+    //Relacion Jugador-Partida: un jugador puede tener varias partidas.
+    @OneToMany(() => Game, game  => game.player)
+    game: Game []
 }

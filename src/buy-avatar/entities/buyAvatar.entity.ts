@@ -1,4 +1,4 @@
-    import { Entity, PrimaryGeneratedColumn, ManyToOne } from "typeorm";
+    import { Entity, PrimaryGeneratedColumn, Column ,ManyToOne } from "typeorm";
     import { Avatar } from "src/avatars/entities/avatar.entity";
     import { Player } from "src/player/entities/player.entity";
     
@@ -7,6 +7,9 @@
         @PrimaryGeneratedColumn()
         id: number;
         
+        @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
+    date : Date;
+
          //relación muchos a uno: muchas compras de avatares pueden pertenecer a un mismo jugador 
         // y un jugador puede tener muchos avatares diferentes
         @ManyToOne(() => Player, player => player.buyAvatars, { eager: true })

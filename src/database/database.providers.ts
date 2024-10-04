@@ -15,8 +15,8 @@ export const databaseProviders = [
                 host: 'localhost',            // Dirección del host de la base de datos
                 port: 3306,                   // Puerto en el que se ejecuta la base de datos
                 username: 'root',             // Nombre de usuario para acceder a la base de datos
-                password: '37380268guada',             // Contraseña para acceder a la base de datos
-                database: 'trivia_atriviate',     // Nombre de la base de datos a la que se conectará
+                password: 'Yessica25',             // Contraseña para acceder a la base de datos
+                database: 'trivia',     // Nombre de la base de datos a la que se conectará
                 entities: [
                     __dirname + '/../**/*.entity{.ts,.js}', // Ruta donde se encuentran las entidades
                 ],

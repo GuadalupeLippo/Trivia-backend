@@ -4,7 +4,7 @@ export class CreateBuyAvatarDto {
     @IsInt()
     avatarId: number;
   
-    // @IsInt()
-    // playerId:number;
+    @IsInt()
+    playerId:number;
     
 }

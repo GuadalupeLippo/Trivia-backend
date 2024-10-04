@@ -1,7 +1,8 @@
-import { TipoDificult } from "src/tipo-dificult/entities/tipo-dificult.entity";
-import { Respuesta } from "src/respuesta/entities/respuesta.entity";
+import { Answer } from "src/answer/entities/answer.entity";
+import { Category } from "src/category/entities/category.entity";
+import { Difficulty } from "src/difficulty/entities/difficulty.entity";
+import { Game } from "src/games/entities/game.entity";
 import { Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
-
 
 
 @Entity()
@@ -12,13 +13,19 @@ export class Question {
   @Column()
   description: string;
 
+   @ManyToOne(() => Difficulty, (difficulty) => difficulty.questions)
+  difficulty: Difficulty;
 
- //esta seria una relacion muchas a una
-  @Column()
-  category: string;
+  @ManyToOne(() => Game, game => game.id)
+  game: Game;
 
-  @ManyToOne(() => TipoDificult, (tipoDificult) => tipoDificult.questions, { eager: true })
-  tipodificult: TipoDificult;
+  @OneToMany(() => Answer, answer => answer.id )
+  answer: Answer;
+
+  @ManyToOne(() => Category, category => category.id )
+  category: Category;
+
+
 
 
 }

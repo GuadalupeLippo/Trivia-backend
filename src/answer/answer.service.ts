@@ -1,10 +1,11 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable , NotFoundException} from '@nestjs/common';
+import { Repository } from 'typeorm';
 import { CreateAnswerDto } from './dto/create-answer.dto';
-import { UpdateAnswerDto } from './dto/update-answer.dto';
-
+import { UpdateAnswerDto } from './dto/update-answer.dto';  
+import { Answer } from './entities/answer.entity';
 @Injectable()
 export class AnswerService {
-  create(createAnswerDto: CreateAnswerDto) {
+  create(createQuestionDto: CreateAnswerDto) {
     return 'This action adds a new answer';
   }
 
@@ -16,7 +17,7 @@ export class AnswerService {
     return `This action returns a #${id} answer`;
   }
 
-  update(id: number, updateAnswerDto: UpdateAnswerDto) {
+  update(id: number, updateQuestionDto: UpdateAnswerDto) {
     return `This action updates a #${id} answer`;
   }
 
