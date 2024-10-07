@@ -1,4 +1,6 @@
-import { IsString, IsInt, Length } from 'class-validator';
+import { IsString, IsInt, Length, IsEnum } from 'class-validator';
+import { AvatarType } from '../entities/avatar.entity'; 
+
 export class CreateAvatarDto {
 
     @IsString()
@@ -7,4 +9,7 @@ export class CreateAvatarDto {
 
     @IsInt()
     price: number;
+
+    @IsEnum(AvatarType, { message: 'Type must be either normal or premium' })
+    type: AvatarType;
 }
