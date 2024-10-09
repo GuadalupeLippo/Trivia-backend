@@ -1,24 +1,32 @@
 import { Inject, Injectable, NotAcceptableException } from '@nestjs/common';
-import { CreateDifficultyDto } from './dto/create-tipo-dificult.dto';
+
 import { UpdateDifficultyDto } from './dto/update-tipo-dificult.dto';
-import { Question } from 'src/questions/entities/question.entity';
+
 import { Difficulty } from './entities/difficulty.entity';
 import { Repository } from 'typeorm';
+import { CreateDifficultyDto } from './dto/create-tipo-dificult.dto';
 
 @Injectable()
 export class DifficultyService {
   constructor(@Inject('DIFFICULTY_REPOSITORY')
-  private questionRepository: Repository<Difficulty>,
+  private difficultyRepository: Repository<Difficulty>,
 ){}
 
-  async create(createTipoDificultDto: UpdateDifficultyDto) {
-    const nivel = this.questionRepository.create(createTipoDificultDto)
-    return this.questionRepository.save(nivel)
+  async create(createDifficultyDto: CreateDifficultyDto):Promise<Difficulty> {
+    const difficulty = this.difficultyRepository.create(createDifficultyDto)
+    return this.difficultyRepository.save(difficulty);
   }
 
   async findAll(): Promise<Difficulty[]> {
-    const difficulty = await this.questionRepository.find()
-    if(!difficulty) throw new NotAcceptableException("No difficulty in Database")
+    const difficulty = await this.difficultyRepository.find({
+      where:
+      [
+        { nivel: 'fácil' },
+        { nivel: 'medio' },
+        { nivel: 'difícil' },
+      ]
+    })
+    if(difficulty.length === 0) throw new NotAcceptableException("No difficulty in Database")
       return difficulty;
   }
 
