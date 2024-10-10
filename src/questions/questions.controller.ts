@@ -20,10 +20,6 @@ export class QuestionsController {
     return this.questionsService.create(createQuestionDto);
   }
 
- 
-
- 
-
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateQuestionDto: UpdateQuestionDto) {
     return this.questionsService.update(+id, updateQuestionDto);
