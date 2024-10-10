@@ -1,4 +1,4 @@
-import { IsString, IsInt, Length } from 'class-validator';
+import { IsInt, IsString, Length } from 'class-validator';
 
 export class CreateDifficultyDto {
     @IsString()
