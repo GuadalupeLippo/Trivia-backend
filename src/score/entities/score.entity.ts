@@ -12,6 +12,9 @@ export class Score {
     @Column('decimal')
     price: number;
 
+    @Column({default : null})
+    image: string;
+
     // Relación uno a muchos con la entidad compra de puntos. Una instancia de puntaje puede tener muchas compras
     @OneToMany(() => BuyScore, buyscore  => buyscore.score)
     buyscore: BuyScore [];
