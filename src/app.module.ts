@@ -16,6 +16,7 @@ import { DifficultyModule } from './difficulty/dificulty.module';
 import { ThrottlerModule, ThrottlerGuard } from '@nestjs/throttler';
 import { APP_GUARD } from '@nestjs/core';
 import { throttle } from 'rxjs';
+import { HealthModule } from './health/health.module';
 
 @Module({
   imports: [ 
@@ -29,7 +30,7 @@ import { throttle } from 'rxjs';
     DifficultyModule, 
     UserModule, 
 
-    PlayerModule, ScoreModule, BuyScoreModule, AuthModule, AnswerModule
+    PlayerModule, ScoreModule, BuyScoreModule, AuthModule, AnswerModule, HealthModule
 
   ], 
  
