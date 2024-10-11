@@ -12,7 +12,7 @@ export class Score {
     @Column('decimal')
     price: number;
 
-    @Column({default : null})
+    @Column()
     image: string;
 
     // Relación uno a muchos con la entidad compra de puntos. Una instancia de puntaje puede tener muchas compras
