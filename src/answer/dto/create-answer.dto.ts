@@ -1,13 +1,14 @@
-import { IsString, IsInt, Length } from 'class-validator';
+import { IsString, IsBoolean, IsOptional, IsInt } from 'class-validator';
+
 export class CreateAnswerDto {
 
     @IsString()
-    @Length(1, 500)
-    image: string;
+    description: string; 
+
+    @IsOptional()
+    @IsBoolean()
+    value?: boolean;  // Opcional para que pueda ser omitido en la solicitud
 
     @IsInt()
-    price: number;
+    questionId: number;
 }
-
-
-
