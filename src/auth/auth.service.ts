@@ -11,6 +11,7 @@ import { HashService } from './hash/hash.service';
 import { LoginDto } from './dto/login.dto';
 import { Player } from 'src/player/entities/player.entity';
 import { CreatePlayerDto } from 'src/player/dto/create-player.dto';
+import { JwtService } from '@nestjs/jwt';
 
 @Injectable()
 export class AuthService {
@@ -18,7 +19,9 @@ export class AuthService {
     private userRepository : Repository<User>;
     @Inject(playerRepository)
     private playerRepository : Repository<Player>;
-    constructor (private readonly hashService : HashService) {};
+    constructor (private readonly hashService : HashService,
+        private readonly jwtService : JwtService
+    ) {};
 
 
     async register(createUserDto : CreateUserDto) {
@@ -38,13 +41,26 @@ export class AuthService {
             
 
             const {password, id, ...rest} = newUser;
-            return rest;
+
+            const payload = { 
+                sub: newPlayer.id, // o player.id si es más apropiado
+                userName: newPlayer.user.name,
+                email: newPlayer.user.email,
+            };
+            const access_token = await this.jwtService.signAsync(payload); // Genera el token
+
+             return {
+                message: "Registro exitoso",
+                user: rest, 
+                player: newPlayer,
+                access_token
+            };
         } catch (error) {
             throw new BadRequestException(error.message)
         }
     }
 
-    async login(loginDto: LoginDto) : Promise <Partial<Player> & Partial<User>> {
+    async login(loginDto: LoginDto) : Promise <{access_token : string}> {
         
         const player = await this.playerRepository.findOne({
             where: {
@@ -59,14 +75,12 @@ export class AuthService {
         const isAuthenticated = await this.hashService.comparePassword(loginDto.password,player.user.password);
         if(!isAuthenticated) throw new UnauthorizedException('Invalid password');
 
-        const { user, ...playerData } = player;
-        const { password, ...userData } = user;
-    
-       
-        return {
-            ...playerData, 
-            ... userData  
-        };
+        const payload = {
+            sub: player.id,
+            userName: player.user.name,
+            email: player.user.email
+        }
+        return { access_token: await this.jwtService.signAsync(payload)}
     }
 
 }

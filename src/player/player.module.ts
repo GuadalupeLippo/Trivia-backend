@@ -5,9 +5,12 @@ import { DatabaseModule } from 'src/database/database.module';
 import { playerProviders } from './player.providers';
 import { userProviders } from 'src/user/user.providers';
 import { buyAvatarProviders } from 'src/buy-avatar/buyAvatar.providers';
+import { ConfigModule } from '@nestjs/config';
 
 @Module({
-  imports: [DatabaseModule],
+  imports: [DatabaseModule, 
+    ConfigModule
+  ],
   controllers: [PlayerController],
   providers: [...playerProviders,
     ...userProviders,
