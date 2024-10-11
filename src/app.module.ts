@@ -4,7 +4,7 @@ import { AppService } from './app.service';
 import { AvatarsModule } from './avatars/avatars.module';
 import { BuyAvatarModule } from './buy-avatar/buyAvatar.module';
 import { QuestionsModule } from './questions/questions.module';
-
+import { CategoryModule } from './category/category.module';
 import { UserModule } from './user/user.module';
 import { PlayerModule } from './player/player.module';
 import { ScoreModule } from './score/score.module';
@@ -30,8 +30,8 @@ import { HealthModule } from './health/health.module';
     DifficultyModule, 
     UserModule, 
 
-    PlayerModule, ScoreModule, BuyScoreModule, AuthModule, AnswerModule, HealthModule
-
+    PlayerModule, ScoreModule, BuyScoreModule, AuthModule, AnswerModule, HealthModule,
+CategoryModule
   ], 
  
 

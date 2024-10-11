@@ -6,3 +6,4 @@ export const buyScoreRepository : string = 'BUYSCORE_REPOSITORY'
 export const gameRepository : string = 'GAME_REPOSITORY';
 export const questionRepository: string = 'QUESTION_REPOSITORY';
 export const difficultyRepository: string = 'DIFFICULTY_REPOSITORY';
+export const categoryRepository: string = 'CATEGORY_REPOSITORY'
