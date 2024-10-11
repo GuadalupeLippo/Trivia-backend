@@ -13,10 +13,16 @@ import { AuthModule } from './auth/auth.module';
 import { AnswerModule } from './answer/answer.module';
 
 import { DifficultyModule } from './difficulty/dificulty.module';
-
+import { ThrottlerModule, ThrottlerGuard } from '@nestjs/throttler';
+import { APP_GUARD } from '@nestjs/core';
+import { throttle } from 'rxjs';
 
 @Module({
   imports: [ 
+    ThrottlerModule.forRoot([{
+      ttl: 60000,
+      limit: 10,
+    }]),
     AvatarsModule, 
     BuyAvatarModule, 
     QuestionsModule, 
@@ -29,7 +35,10 @@ import { DifficultyModule } from './difficulty/dificulty.module';
  
 
 controllers: [AppController],
-  providers: [AppService]
+  providers: [AppService,
+    {provide: APP_GUARD,
+    useClass: ThrottlerGuard
+  }]
  
 } )
 export class AppModule {}
