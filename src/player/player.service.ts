@@ -18,9 +18,18 @@ export class PlayerService {
 
 
 
-  async FindPlayerById(playerId: number): Promise<Player> {
-    return await this.playerRepository.findOne({ where: { id: playerId } });
+  async getAuthenticatedPlayer(playerId: number): Promise<Player> {
+    const player = await this.playerRepository.findOne({
+      where: { id: playerId },
+      relations: ['user'],  // Carga también los datos del usuario relacionados
+    });
+    if (!player) {
+      throw new NotFoundException('Player not found');
+    }
+
+    return player;
   }
+  
 
   updatePlayer(id: number, updatePlayerDto: UpdatePlayerDto) {
     return `This action updates a #${id} player`;
