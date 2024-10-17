@@ -1,4 +1,4 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { CreatePlayerDto } from './dto/create-player.dto';
 import { UpdatePlayerDto } from './dto/update-player.dto';
 import { playerRepository } from 'src/constants/constant';
@@ -18,15 +18,26 @@ export class PlayerService {
 
 
 
-  findOne(id: number) {
-    return `This action returns a #${id} player`;
-  }
+  async getAuthenticatedPlayer(playerId: number): Promise<Player> {
+    const player = await this.playerRepository.findOne({
+      where: { id: playerId },
+      relations: ['user'],  // Carga también los datos del usuario relacionados
+    });
+    if (!player) {
+      throw new NotFoundException('Player not found');
+    }
 
-  update(id: number, updatePlayerDto: UpdatePlayerDto) {
+    return player;
+  }
+  
+
+  updatePlayer(id: number, updatePlayerDto: UpdatePlayerDto) {
     return `This action updates a #${id} player`;
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} player`;
-  }
+  async deletePlayer(id: number): Promise <String> {
+    const player = await this.playerRepository.findOne({ where: { id } });
+    if (!player) throw new NotFoundException(`player with id ${id} not found`);
+    await this.playerRepository.remove(player)
+    return 'player Deleted'}
 }

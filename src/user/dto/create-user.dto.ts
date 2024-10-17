@@ -4,17 +4,14 @@ import { IsEmail, IsNotEmpty, IsString, IsStrongPassword, IsUrl, Length, minLeng
 export class CreateUserDto {
     
     @IsString()
-    @IsNotEmpty()
     @Length(1, 225)
     name: string;
 
     @IsString()
-    @IsNotEmpty()
     @IsEmail()
     email: string;
 
     @IsString()
-    @IsNotEmpty()
     @IsStrongPassword({
         minLength: 8,
         minLowercase: 1,

@@ -1,30 +1,42 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, 
+  Get,
+  Body,
+  Patch, 
+  Param, 
+  Delete, 
+  UseGuards, Req } from '@nestjs/common';
 import { PlayerService } from './player.service';
-import { CreatePlayerDto } from './dto/create-player.dto';
 import { UpdatePlayerDto } from './dto/update-player.dto';
 import { Player } from './entities/player.entity';
+import { AuthGuard } from 'src/auth/auth.guard';
+import { request } from 'http';
 
 @Controller('player')
 export class PlayerController {
   constructor(private readonly playerService: PlayerService) {}
+
+  @UseGuards(AuthGuard)
+  @Get('profile')
+  async getAuthenticatedPlayer(@Req() request: any) {
+    const playerId = request.user.sub; // Esto asume que el ID está en el campo 'sub'
+    return await this.playerService.getAuthenticatedPlayer(playerId);
+
+  }
+  
+
 
   @Get()
   async getAllPlayers(): Promise<Player[]> {
     return this.playerService.findAllPlayers();
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.playerService.findOne(+id);
-  }
-
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updatePlayerDto: UpdatePlayerDto) {
-    return this.playerService.update(+id, updatePlayerDto);
+  updatePlayer(@Param('id') id: string, @Body() updatePlayerDto: UpdatePlayerDto) {
+    return this.playerService.updatePlayer(+id, updatePlayerDto);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.playerService.remove(+id);
+  deletePlayer(@Param('id') id: string) {
+    return this.playerService.deletePlayer(+id);
   }
 }

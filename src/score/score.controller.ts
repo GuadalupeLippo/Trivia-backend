@@ -8,13 +8,13 @@ export class ScoreController {
   constructor(private readonly scoreService: ScoreService) {}
 
   @Post()
-  create(@Body() createScoreDto: CreateScoreDto) {
-    return this.scoreService.create(createScoreDto);
+  createOneScore(@Body() createScoreDto: CreateScoreDto) {
+    return this.scoreService.createOneScore(createScoreDto);
   }
 
   @Get()
-  findAll() {
-    return this.scoreService.findAll();
+  findAllScore() {
+    return this.scoreService.findAllScore();
   }
 
   @Get(':id')
@@ -23,12 +23,12 @@ export class ScoreController {
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateScoreDto: UpdateScoreDto) {
-    return this.scoreService.update(+id, updateScoreDto);
+  updateScore(@Param('id') id: string, @Body() updateScoreDto: UpdateScoreDto) {
+    return this.scoreService.updateScore(+id, updateScoreDto);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.scoreService.remove(+id);
+  deleteScore(@Param('id') id: string) {
+    return this.scoreService.deleteScore(+id);
   }
 }
