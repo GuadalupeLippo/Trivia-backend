@@ -17,6 +17,7 @@ import { ThrottlerModule, ThrottlerGuard } from '@nestjs/throttler';
 import { APP_GUARD } from '@nestjs/core';
 
 import { HealthModule } from './health/health.module';
+import { GamesModule } from './games/games.module';
 
 @Module({
   imports: [ 
@@ -29,9 +30,13 @@ import { HealthModule } from './health/health.module';
     QuestionsModule, 
     DifficultyModule, 
     UserModule, 
-
-    PlayerModule, ScoreModule, BuyScoreModule, AuthModule, AnswerModule, HealthModule,
-CategoryModule
+    PlayerModule, 
+    ScoreModule, BuyScoreModule,
+    AuthModule,
+    AnswerModule,
+    HealthModule,
+    CategoryModule,
+    GamesModule
   ], 
  
 

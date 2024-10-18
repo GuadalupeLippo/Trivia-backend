@@ -42,7 +42,7 @@ export class GamesService {
       difficulty,
     });
 
-    return this.gameRepository.save(game);
+    return await this.gameRepository.save(game);
   }
   
   async findAllGames(): Promise<Game[]> {
