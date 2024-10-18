@@ -2,24 +2,27 @@ import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/commo
 import { GamesService } from './games.service';
 import { CreateGameDto } from './dto/create-game.dto';
 import { UpdateGameDto } from './dto/update-game.dto';
+import { Game } from './entities/game.entity';
 
-@Controller('games')
+@Controller('trivia')
 export class GamesController {
+  
   constructor(private readonly gamesService: GamesService) {}
 
-  @Post()
-  create(@Body() createGameDto: CreateGameDto) {
-    return this.gamesService.create(createGameDto);
-  }
-
+ 
   @Get()
-  findAll() {
-    return this.gamesService.findAll();
+  findAllGames() {
+    return this.gamesService.findAllGames();
   }
 
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.gamesService.findOne(+id);
+  }
+
+  @Post()
+  async createGame(@Body() createGameDto: CreateGameDto): Promise<Game> {
+    return this.gamesService.createGame(createGameDto);
   }
 
   @Patch(':id')
