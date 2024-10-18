@@ -84,9 +84,9 @@ export class AuthService {
         return { 
             access_token,
             player: {
-                ...player, // Esto incluirá todos los atributos del jugador
+                ...player,
                 user: {
-                    ...player.user // Esto incluirá todos los atributos del usuario
+                    ...player.user 
                 }
             }
         }

@@ -4,7 +4,7 @@ import { CreateGameDto } from './dto/create-game.dto';
 import { UpdateGameDto } from './dto/update-game.dto';
 import { Game } from './entities/game.entity';
 
-@Controller('trivia')
+@Controller('games')
 export class GamesController {
   
   constructor(private readonly gamesService: GamesService) {}
@@ -20,7 +20,7 @@ export class GamesController {
     return this.gamesService.findOne(+id);
   }
 
-  @Post()
+  @Post('/trivia')
   async createGame(@Body() createGameDto: CreateGameDto): Promise<Game> {
     return this.gamesService.createGame(createGameDto);
   }
