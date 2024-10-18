@@ -12,6 +12,11 @@ export class Category {
 
   @Column()
   logo: string;
+  
+  @Column()
+  puntos: number;
+
+  
 
   @OneToOne(() => Game, (game) => game.category)
   game: Game;

@@ -15,7 +15,7 @@ import { AnswerModule } from './answer/answer.module';
 import { DifficultyModule } from './difficulty/dificulty.module';
 import { ThrottlerModule, ThrottlerGuard } from '@nestjs/throttler';
 import { APP_GUARD } from '@nestjs/core';
-import { throttle } from 'rxjs';
+
 import { HealthModule } from './health/health.module';
 
 @Module({
