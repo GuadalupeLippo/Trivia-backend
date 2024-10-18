@@ -2,7 +2,7 @@ import { DataSource } from 'typeorm';
 import { BuyScore } from './entities/buy-score.entity';
 import { buyScoreRepository } from 'src/constants/constant';
 
-export const buyAvatarProviders = [
+export const buyScoreProviders = [
     {
         provide: buyScoreRepository ,
         useFactory: (dataSource: DataSource) => dataSource.getRepository(BuyScore),
