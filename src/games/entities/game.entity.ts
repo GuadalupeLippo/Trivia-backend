@@ -10,8 +10,8 @@ export class Game {
     @PrimaryGeneratedColumn()
     id : number;
 
-    @Column('int')
-    score: number;
+    @Column({default: 0})
+    totalScore: number;
 
     //relacion partidas-jugador: muchas partidas pueden tener un mismo jugador.
     @ManyToOne(() => Player, player => player.game, { eager: true })
