@@ -3,7 +3,7 @@ import { QuestionsService } from './questions.service';
 import { CreateQuestionDto } from './dto/create-question.dto';
 import { UpdateQuestionDto } from './dto/update-question.dto';
 
-@Controller('/questions')
+@Controller('questions')
 export class QuestionsController {
   constructor(private readonly questionsService: QuestionsService) {}
 
@@ -16,8 +16,8 @@ export class QuestionsController {
     return this.questionsService.findOne(+id);
   }
   @Post()
-  create(@Body() createQuestionDto: CreateQuestionDto) {
-    return this.questionsService.create(createQuestionDto);
+  async createQuestionWithAnswers(@Body() createQuestionDto: CreateQuestionDto) {
+    return await this.questionsService.createQuestionWhitAnswers(createQuestionDto);
   }
 
   @Patch(':id')

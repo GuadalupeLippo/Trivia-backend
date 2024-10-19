@@ -18,7 +18,11 @@ export class CategoryService {
   }
   
   async findAll(): Promise<Category[]> {
-    const categories = await this.categoryRepository.find()
+    const categories = await this.categoryRepository.find({
+      relations: ['question',
+        'game'
+      ]
+    })
     if (!categories.length) throw new NotFoundException("No categories in database")
     return categories
   }

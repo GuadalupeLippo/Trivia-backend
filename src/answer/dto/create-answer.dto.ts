@@ -1,4 +1,4 @@
-import { IsString, IsBoolean, IsOptional, IsInt } from 'class-validator';
+import { IsString, IsBoolean, IsOptional} from 'class-validator';
 
 export class CreateAnswerDto {
 
@@ -7,8 +7,6 @@ export class CreateAnswerDto {
 
     @IsOptional()
     @IsBoolean()
-    value?: boolean;  // Opcional para que pueda ser omitido en la solicitud
+    value: boolean;  // Opcional para que pueda ser omitido en la solicitud
 
-    @IsInt()
-    questionId: number;
 }

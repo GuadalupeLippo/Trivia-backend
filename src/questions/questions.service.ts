@@ -1,28 +1,63 @@
-import { Inject, Injectable, NotAcceptableException } from '@nestjs/common';
+import { Inject,
+  Injectable,
+  NotAcceptableException, 
+  NotFoundException} from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { CreateQuestionDto } from './dto/create-question.dto';
 import { UpdateQuestionDto } from './dto/update-question.dto';
 import { Question } from './entities/question.entity';
+import { answerRepository, categoryRepository,
+   questionRepository } from 'src/constants/constant';
+import { Category } from 'src/category/entities/category.entity';
+import { Answer } from 'src/answer/entities/answer.entity';
+import { CreateAnswerDto } from 'src/answer/dto/create-answer.dto';
 
 @Injectable()
 export class QuestionsService {
- 
-
-  constructor(@Inject('QUESTION_REPOSITORY')
+  constructor(@Inject(questionRepository)
     private questionRepository: Repository<Question>,
+    @Inject(categoryRepository)
+    private categoryRepository: Repository<Category>,
+  @Inject(answerRepository)
+  private answerRepository : Repository<Answer>
+
   ){}
 
+  async createQuestionWhitAnswers(createQuestionDto: CreateQuestionDto): Promise<Question> {
+    const category = await this.categoryRepository.findOne({ where: { id: createQuestionDto.categoryId } });
+    if (!category) {
+        throw new NotFoundException('Category not found');
+    }
 
- async create(createQuestionDto: CreateQuestionDto): Promise<Question> {
-    const question = this.questionRepository.create(createQuestionDto)
-    return this.questionRepository.save(question)
+    const question = this.questionRepository.create({
+        description: createQuestionDto.description,
+        category,
+    });
 
-  
-  }
+    
+    const savedQuestion = await this.questionRepository.save(question);
+    
+
+    //guardar las respuestas
+    const answers = createQuestionDto.answers.map((answerDto: CreateAnswerDto) => {
+        return this.answerRepository.create({
+            description: answerDto.description,
+            value: answerDto.value,
+            question: savedQuestion, 
+        });
+    });
+
+    await this.answerRepository.save(answers);
+
+    // Devolver la pregunta guardada con sus respuestas
+    return await this.questionRepository.findOne({ where: { id: savedQuestion.id }, relations: ['answers'] });
+}
+
+
   
   async findAll(): Promise<Question[]> {
     const question = await this.questionRepository.find({
-      relations: [],
+      relations: ['answers'],
     });
     
     if(!question || question.length === 0) throw new NotAcceptableException("No question in BasedeDatos")
