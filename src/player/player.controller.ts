@@ -15,16 +15,16 @@ import { request } from 'http';
 export class PlayerController {
   constructor(private readonly playerService: PlayerService) {}
 
-
   @UseGuards(AuthGuard)
-  @Get('profile') 
+  @Get('profile')
   async getAuthenticatedPlayer(@Req() request: any) {
-    const playerId = request.user.sub 
-    return this.playerService.FindPlayerById(playerId);
-  } 
+    const playerId = request.user.sub; // Esto asume que el ID está en el campo 'sub'
+    return await this.playerService.getAuthenticatedPlayer(playerId);
+
+  }
+  
 
 
-  @UseGuards(AuthGuard)
   @Get()
   async getAllPlayers(): Promise<Player[]> {
     return this.playerService.findAllPlayers();

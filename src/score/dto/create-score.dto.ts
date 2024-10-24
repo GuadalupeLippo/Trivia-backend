@@ -1,4 +1,4 @@
-import { IsInt, IsNumber, IsOptional, IsUrl } from "class-validator";
+import { IsInt, IsNumber, IsString} from "class-validator";
 
 export class CreateScoreDto {
 @IsInt()
@@ -9,7 +9,6 @@ points : number;
 @IsNumber()
 price : number;
 
-@IsUrl()
-@IsOptional()
+@IsString()
 image : string;
 }

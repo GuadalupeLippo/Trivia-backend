@@ -12,9 +12,13 @@ export class Category {
 
   @Column()
   logo: string;
+  
+  @Column()
+  puntos: number;
 
-  @OneToOne(() => Game, (game) => game.category)
-  game: Game;
-  @OneToMany(() => Question , (question) => question.id)
-  question: Question;
+  @OneToMany(() => Game, (game) => game.category)
+  game: Game[];
+
+  @OneToMany(() => Question , (question) => question.category, {eager: true})
+  question: Question[];
 }

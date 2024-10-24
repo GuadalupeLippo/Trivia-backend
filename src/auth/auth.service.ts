@@ -60,7 +60,7 @@ export class AuthService {
         }
     }
 
-    async login(loginDto: LoginDto) : Promise <{access_token : string}> {
+    async login(loginDto: LoginDto) : Promise <any> {
         
         const player = await this.playerRepository.findOne({
             where: {
@@ -80,7 +80,16 @@ export class AuthService {
             userName: player.user.name,
             email: player.user.email
         }
-        return { access_token: await this.jwtService.signAsync(payload)}
+        const access_token= await this.jwtService.signAsync(payload)
+        return { 
+            access_token,
+            player: {
+                ...player,
+                user: {
+                    ...player.user 
+                }
+            }
+        }
     }
 
 }

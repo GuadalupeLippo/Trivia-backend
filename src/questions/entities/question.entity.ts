@@ -13,16 +13,13 @@ export class Question {
   @Column()
   description: string;
 
-   @ManyToOne(() => Difficulty, (difficulty) => difficulty.questions)
-  difficulty: Difficulty;
-
-  @ManyToOne(() => Game, game => game.id)
+  @ManyToOne(() => Game, game => game.questions)
   game: Game;
 
-  @OneToMany(() => Answer, answer => answer.id )
-  answer: Answer;
+  @OneToMany(() => Answer, answer => answer.question, { cascade: true} )
+  answers: Answer[];
 
-  @ManyToOne(() => Category, category => category.id )
+  @ManyToOne(() => Category, category => category.question )
   category: Category;
 
 

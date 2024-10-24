@@ -15,8 +15,9 @@ import { AnswerModule } from './answer/answer.module';
 import { DifficultyModule } from './difficulty/dificulty.module';
 import { ThrottlerModule, ThrottlerGuard } from '@nestjs/throttler';
 import { APP_GUARD } from '@nestjs/core';
-import { throttle } from 'rxjs';
+
 import { HealthModule } from './health/health.module';
+import { GamesModule } from './games/games.module';
 
 @Module({
   imports: [ 
@@ -29,9 +30,13 @@ import { HealthModule } from './health/health.module';
     QuestionsModule, 
     DifficultyModule, 
     UserModule, 
-
-    PlayerModule, ScoreModule, BuyScoreModule, AuthModule, AnswerModule, HealthModule,
-CategoryModule
+    PlayerModule, 
+    ScoreModule, BuyScoreModule,
+    AuthModule,
+    AnswerModule,
+    HealthModule,
+    CategoryModule,
+    GamesModule
   ], 
  
 

@@ -24,7 +24,8 @@ export class DifficultyService {
         { nivel: 'fácil' },
         { nivel: 'medio' },
         { nivel: 'difícil' },
-      ]
+      ],
+      relations:['games']
     })
     if(difficulty.length === 0) throw new NotAcceptableException("No difficulty in Database")
       return difficulty;
