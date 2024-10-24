@@ -16,10 +16,9 @@ export class Category {
   @Column()
   puntos: number;
 
-  
+  @OneToMany(() => Game, (game) => game.category)
+  game: Game[];
 
-  @OneToOne(() => Game, (game) => game.category)
-  game: Game;
-  @OneToMany(() => Question , (question) => question.id)
-  question: Question;
+  @OneToMany(() => Question , (question) => question.category, {eager: true})
+  question: Question[];
 }

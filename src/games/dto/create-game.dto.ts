@@ -1,4 +1,4 @@
-import { IsInt } from "class-validator";
+import { IsArray, IsInt } from "class-validator";
 
 export class CreateGameDto {
    
@@ -8,8 +8,6 @@ export class CreateGameDto {
     categoryId: number;
     @IsInt()
     difficultyId: number;
-    @IsInt()
-    answerId: number;
 
 
 }

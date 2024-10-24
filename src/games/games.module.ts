@@ -5,8 +5,8 @@ import { DatabaseModule } from 'src/database/database.module';
 import { playerProviders } from 'src/player/player.providers';
 import { categoryProviders } from 'src/category/category.providers';
 import { difficultyProviders } from 'src/difficulty/difficulty.providers';
-import { answerProviders } from 'src/answer/answer.providers';
 import { gameProviders } from './games.providers';
+import { questionProviders } from 'src/questions/questions.providers';
 
 
 @Module({
@@ -16,7 +16,7 @@ import { gameProviders } from './games.providers';
     ...playerProviders,
     ...categoryProviders,
     ...difficultyProviders,
-    ...answerProviders,
+    ...questionProviders,
     ...gameProviders
 
   ],
