@@ -17,7 +17,7 @@ export class QuestionsController {
   }
   @Post()
   async createQuestionWithAnswers(@Body() createQuestionDto: CreateQuestionDto) {
-    return await this.questionsService.createQuestionWhitAnswers(createQuestionDto);
+    return this.questionsService.createQuestionWhitAnswers(createQuestionDto);
   }
 
   @Patch(':id')

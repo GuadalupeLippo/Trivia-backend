@@ -10,9 +10,6 @@ export class Category {
   @Column()
   type: string;
 
-  @Column()
-  logo: string;
-  
   @Column({default: 5})
   puntos: number;
 
