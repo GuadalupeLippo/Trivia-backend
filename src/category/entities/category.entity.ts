@@ -13,7 +13,7 @@ export class Category {
   @Column()
   logo: string;
   
-  @Column()
+  @Column({default: 5})
   puntos: number;
 
   @OneToMany(() => Game, (game) => game.category)
