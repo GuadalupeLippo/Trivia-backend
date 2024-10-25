@@ -13,7 +13,11 @@ export class PlayerService {
   ) {}
 
   async findAllPlayers(): Promise<Player[]> {
-    return this.playerRepository.find({ relations: ['user'] }); 
+    return this.playerRepository.find({ relations: ['user',
+       'game',
+      'buyAvatars.purchasedAvatar',
+      'buyscore.score'
+    ] }); 
   }
 
 
@@ -21,7 +25,11 @@ export class PlayerService {
   async getAuthenticatedPlayer(playerId: number): Promise<Player> {
     const player = await this.playerRepository.findOne({
       where: { id: playerId },
-      relations: ['user'],  // Carga también los datos del usuario relacionados
+      relations: ['user',
+        'game',
+        'buyAvatars.purchasedAvatar',
+        'buyscore.score'
+      ],  
     });
     if (!player) {
       throw new NotFoundException('Player not found');
