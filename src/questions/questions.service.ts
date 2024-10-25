@@ -14,6 +14,9 @@ import { CreateAnswerDto } from 'src/answer/dto/create-answer.dto';
 
 @Injectable()
 export class QuestionsService {
+  createQuestionWhitAnswers(createQuestionDto: CreateQuestionDto) {
+    throw new Error('Method not implemented.');
+  }
   constructor(@Inject(questionRepository)
     private questionRepository: Repository<Question>,
     @Inject(categoryRepository)
@@ -23,34 +26,36 @@ export class QuestionsService {
 
   ){}
 
-  async createQuestionWhitAnswers(createQuestionDto: CreateQuestionDto): Promise<Question> {
-    const category = await this.categoryRepository.findOne({ where: { id: createQuestionDto.categoryId } });
-    if (!category) {
-        throw new NotFoundException('Category not found');
-    }
-
-    const question = this.questionRepository.create({
-        description: createQuestionDto.description,
-        category,
-    });
-
-    
-    const savedQuestion = await this.questionRepository.save(question);
-    
-
-    //guardar las respuestas
-    const answers = createQuestionDto.answers.map((answerDto: CreateAnswerDto) => {
-        return this.answerRepository.create({
-            description: answerDto.description,
-            value: answerDto.value,
-            question: savedQuestion, 
+  async createMultipleQuestionsWithAnswers(createQuestionsDto: CreateQuestionDto[]): Promise<Question[]> {
+    const savedQuestions = [];
+    for (const createQuestionDto of createQuestionsDto) {
+        const category = await this.categoryRepository.findOne({ where: { id: createQuestionDto.categoryId } });
+        if (!category) {
+            throw new NotFoundException(`Category with ID ${createQuestionDto.categoryId} not found`);
+        }
+        // Crear la pregunta
+        const question = this.questionRepository.create({
+            description: createQuestionDto.description,
+            category,
         });
-    });
-
-    await this.answerRepository.save(answers);
-
-    // Devolver la pregunta guardada con sus respuestas
-    return await this.questionRepository.findOne({ where: { id: savedQuestion.id }, relations: ['answers'] });
+        const savedQuestion = await this.questionRepository.save(question);
+        // Crear las respuestas para la pregunta
+        const answers = createQuestionDto.answers.map((answerDto: CreateAnswerDto) => {
+            return this.answerRepository.create({
+                description: answerDto.description,
+                value: answerDto.value,
+                question: savedQuestion,
+            });
+        });
+        await this.answerRepository.save(answers);
+        // Añadir la pregunta con respuestas al array de preguntas guardadas
+        const fullQuestion = await this.questionRepository.findOne({
+            where: { id: savedQuestion.id },
+            relations: ['answers']
+        });
+        savedQuestions.push(fullQuestion);
+    }
+    return savedQuestions; // Devuelve todas las preguntas con sus respuestas
 }
 
 
