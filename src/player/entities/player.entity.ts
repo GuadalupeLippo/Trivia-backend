@@ -30,6 +30,6 @@ export class Player {
     buyscore: BuyScore [];
 
     //Relacion Jugador-Partida: un jugador puede tener varias partidas.
-    @OneToMany(() => Game, game  => game.player , {eager:true})
+    @OneToMany(() => Game, game  => game.player )
     game: Game []
 }
