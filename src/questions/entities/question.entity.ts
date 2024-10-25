@@ -1,6 +1,5 @@
 import { Answer } from "src/answer/entities/answer.entity";
 import { Category } from "src/category/entities/category.entity";
-import { Difficulty } from "src/difficulty/entities/difficulty.entity";
 import { Game } from "src/games/entities/game.entity";
 import { Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 
