@@ -16,8 +16,8 @@ export class QuestionsController {
     return this.questionsService.findOne(+id);
   }
   @Post()
-  async createQuestionWithAnswers(@Body() createQuestionDto: CreateQuestionDto) {
-    return this.questionsService.createQuestionWhitAnswers(createQuestionDto);
+  async createMultipleQuestionWithAnswers(@Body() createQuestionDto: CreateQuestionDto[]) {
+    return this.questionsService.createMultipleQuestionsWithAnswers(createQuestionDto);
   }
 
   @Patch(':id')

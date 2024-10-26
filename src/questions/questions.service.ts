@@ -14,9 +14,6 @@ import { CreateAnswerDto } from 'src/answer/dto/create-answer.dto';
 
 @Injectable()
 export class QuestionsService {
-  createQuestionWhitAnswers(createQuestionDto: CreateQuestionDto) {
-    throw new Error('Method not implemented.');
-  }
   constructor(@Inject(questionRepository)
     private questionRepository: Repository<Question>,
     @Inject(categoryRepository)
@@ -33,13 +30,13 @@ export class QuestionsService {
         if (!category) {
             throw new NotFoundException(`Category with ID ${createQuestionDto.categoryId} not found`);
         }
-        // Crear la pregunta
+        
         const question = this.questionRepository.create({
             description: createQuestionDto.description,
             category,
         });
         const savedQuestion = await this.questionRepository.save(question);
-        // Crear las respuestas para la pregunta
+        
         const answers = createQuestionDto.answers.map((answerDto: CreateAnswerDto) => {
             return this.answerRepository.create({
                 description: answerDto.description,
