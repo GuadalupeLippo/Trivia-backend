@@ -5,15 +5,16 @@ import { BuyAvatar } from './entities/buyAvatar.entity';
 import { Avatar } from 'src/avatars/entities/avatar.entity';
 import { Player } from 'src/player/entities/player.entity';
 import { Repository } from 'typeorm';
+import { avatarRepository, buyAvatarRepository, playerRepository } from 'src/constants/constant';
 
 @Injectable()
 export class BuyAvatarService {
   constructor(
-    @Inject('AVATAR_REPOSITORY')
+    @Inject(avatarRepository)
     private avatarRepository: Repository<Avatar>,
-    @Inject('BUYAVATAR_REPOSITORY')
+    @Inject(buyAvatarRepository)
     private buyAvatarRepository: Repository<BuyAvatar>,
-    @Inject('PLAYER_REPOSITORY') 
+    @Inject(playerRepository) 
     private playerRepository: Repository<Player>
   ) {}
 
@@ -21,6 +22,21 @@ export class BuyAvatarService {
     const buyAvatar = await this.buyAvatarRepository.find({ relations: ["purchasedAvatar","player"] });
     if (!buyAvatar.length) throw new NotFoundException("No purchases in database")
     return buyAvatar
+
+}
+
+async findBuyAvatarById(buyAvatarId: number): Promise<BuyAvatar> {
+  try {
+  const buyAvatar = await this.buyAvatarRepository.findOne({ where: { id: buyAvatarId  },
+    relations:['purchasedAvatar',
+      'player'
+    ] });
+  if (!buyAvatar) throw new NotFoundException("No purchases in database");
+    return buyAvatar
+  } catch {
+      throw new NotFoundException("No purchases in database")}
+
+ 
 
 }
 

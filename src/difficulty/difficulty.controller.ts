@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, ParseIntPipe, Patch, Post } from '@nestjs/common';
 import { DifficultyService } from './difficulty.service';
 import { CreateDifficultyDto } from './dto/create-tipo-dificult.dto';
 import { UpdateDifficultyDto } from './dto/update-tipo-dificult.dto';
@@ -8,27 +8,27 @@ export class difficultyController {
   constructor(private readonly DifficultyService: DifficultyService) {}
 
   @Post()
-  create(@Body() createTipoDificultDto: CreateDifficultyDto) {
-    return this.DifficultyService.create(createTipoDificultDto);
+  async create(@Body() createTipoDificultDto: CreateDifficultyDto) {
+    return await this.DifficultyService.create(createTipoDificultDto);
   }
 
   @Get()
-  findAll() {
-    return this.DifficultyService.findAll();
+  async findAll() {
+    return await this.DifficultyService.findAll();
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.DifficultyService.findOne(+id);
+  async findOneDifficulty(@Param('id', ParseIntPipe) id: number) {
+    return await this.DifficultyService.findOneDifficulty(+id);
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateTipoDificultDto: UpdateDifficultyDto) {
-    return this.DifficultyService.update(+id, updateTipoDificultDto);
+  async update(@Param('id') id: number, @Body() updateTipoDificultDto: UpdateDifficultyDto) {
+    return await this.DifficultyService.update(+id, updateTipoDificultDto);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.DifficultyService.remove(+id);
+  async remove(@Param('id') id: number) {
+    return await this.DifficultyService.remove(+id);
   }
 }

@@ -2,6 +2,7 @@ import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/commo
 import { QuestionsService } from './questions.service';
 import { CreateQuestionDto } from './dto/create-question.dto';
 import { UpdateQuestionDto } from './dto/update-question.dto';
+import { Question } from './entities/question.entity';
 
 @Controller('questions')
 export class QuestionsController {
@@ -9,24 +10,26 @@ export class QuestionsController {
 
  @Get()
   async findAll() {
-    return  await this.questionsService.findAll();
+    return  await this.questionsService.getAllQuestions();
   }
-   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.questionsService.findOne(+id);
+
+  @Get('/:random')
+  async getRandomQuestions() {
+    return await this.questionsService.getRandomQuestions();
   }
+
   @Post()
   async createMultipleQuestionWithAnswers(@Body() createQuestionDto: CreateQuestionDto[]) {
     return this.questionsService.createMultipleQuestionsWithAnswers(createQuestionDto);
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateQuestionDto: UpdateQuestionDto) {
-    return this.questionsService.update(+id, updateQuestionDto);
+  async update(@Param('id') id: string, @Body() updateQuestionDto: UpdateQuestionDto) {
+    return await this.questionsService.update(+id, updateQuestionDto);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.questionsService.remove(+id);
+  async remove(@Param('id') id: string) {
+    return await this.questionsService.remove(+id);
   }
 }

@@ -2,15 +2,16 @@
 
 import { DataSource } from 'typeorm';
 import { Avatar } from './entities/avatar.entity';
+import { avatarRepository, dataSource } from 'src/constants/constant';
 export const avatarProviders = [
     {
         // El proveedor se identifica por la cadena 'PHOTO_REPOSITORY'
-        provide: 'AVATAR_REPOSITORY',
+        provide: avatarRepository,
 
         // Define una fábrica que obtiene el repositorio de la entidad Photo
         useFactory: (dataSource: DataSource) => dataSource.getRepository(Avatar),
 
         // Indica que el proveedor necesita la inyección del 'DATA_SOURCE'
-        inject: ['DATA_SOURCE'],
+        inject: [dataSource],
     },
 ];

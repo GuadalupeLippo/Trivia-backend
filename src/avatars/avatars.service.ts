@@ -3,17 +3,30 @@ import { CreateAvatarDto } from './dto/create-avatar.dto';
 import { UpdateAvatarDto } from './dto/update-avatar.dto';
 import { Avatar } from './entities/avatar.entity';
 import { Repository } from 'typeorm';
+import { avatarRepository } from 'src/constants/constant';
 
 @Injectable()
 export class AvatarsService {
   constructor(
-    @Inject('AVATAR_REPOSITORY')
+    @Inject(avatarRepository)
     private avatarRepository: Repository<Avatar>,
   ){}
 
   async createOne(createAvatarDto: CreateAvatarDto): Promise<Avatar> {
     const avatar = this.avatarRepository.create(createAvatarDto)
     return this.avatarRepository.save(avatar)
+  }
+
+  async findOneAvatar(avatarId: number): Promise<Avatar> {
+    try {
+    const avatar = await this.avatarRepository.findOne({ where: { id: avatarId  },
+      relations:['purchasedAvatars',
+        'purchasedAvatars.player'
+      ] });
+    if (!avatar) throw new NotFoundException("No avatar in database");
+      return avatar
+    } catch {
+        throw new NotFoundException("No avatar in database")}
   }
   
   async findAll(): Promise<Avatar[]> {

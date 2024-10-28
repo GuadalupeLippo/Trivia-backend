@@ -45,19 +45,19 @@ export class QuestionsService {
             });
         });
         await this.answerRepository.save(answers);
-        // Añadir la pregunta con respuestas al array de preguntas guardadas
+      
         const fullQuestion = await this.questionRepository.findOne({
             where: { id: savedQuestion.id },
             relations: ['answers']
         });
         savedQuestions.push(fullQuestion);
     }
-    return savedQuestions; // Devuelve todas las preguntas con sus respuestas
+    return savedQuestions; 
 }
 
 
   
-  async findAll(): Promise<Question[]> {
+  async getAllQuestions(): Promise<Question[]> {
     const question = await this.questionRepository.find({
       relations: ['answers'],
     });
@@ -66,11 +66,22 @@ export class QuestionsService {
       return question;
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} question`;
+  async getRandomQuestions() {
+    try{
+      const randomQuestions = await this.questionRepository
+        .createQueryBuilder("question")
+        .orderBy("RAND()")
+        .take(50)
+        .getMany();
+
+      return randomQuestions;
+    } catch (err) {
+          throw new NotFoundException(err.message)
+      }
   }
 
- async update(id: number, updateQuestionDto: UpdateQuestionDto) {
+  
+ async update(id: number, updateQuestionDto: UpdateQuestionDto) : Promise<Question> {
    const question  = await this.questionRepository.preload({
     id: id,
     ...updateQuestionDto
@@ -79,12 +90,10 @@ export class QuestionsService {
     return await this.questionRepository.save(question)
   }
 
-  async remove(id: number): Promise<void> {
+  async remove(id: number): Promise<String> {
     const question = await this.questionRepository.findOne({where: {id} });
     if(!question) throw new NotAcceptableException('question con id: ${id} No se encuentra')
       await this.questionRepository.remove(question)
-
-
-   
+    return 'question deleted' 
   }
 }
