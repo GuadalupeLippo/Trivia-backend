@@ -8,27 +8,27 @@ export class BuyScoreController {
   constructor(private readonly buyScoreService: BuyScoreService) {}
 
   @Post()
-  create(@Body() createBuyScoreDto: CreateBuyScoreDto) {
-    return this.buyScoreService.create(createBuyScoreDto);
+  async create(@Body() createBuyScoreDto: CreateBuyScoreDto) {
+    return await this.buyScoreService.createBuyScore(createBuyScoreDto);
   }
 
   @Get()
-  findAll() {
-    return this.buyScoreService.findAll();
+  async findAll() {
+    return await this.buyScoreService.findAll();
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.buyScoreService.findOne(+id);
+  async findBuyScoreById(@Param('id') id: number) {
+    return await this.buyScoreService.findBuyScoreById(+id);
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateBuyScoreDto: UpdateBuyScoreDto) {
-    return this.buyScoreService.updateOne(+id, updateBuyScoreDto);
+  async update(@Param('id') id: number, @Body() updateBuyScoreDto: UpdateBuyScoreDto) {
+    return await this.buyScoreService.updateOne(+id, updateBuyScoreDto);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
+  remove(@Param('id') id: number) {
     return this.buyScoreService.remove(+id);
   }
 }

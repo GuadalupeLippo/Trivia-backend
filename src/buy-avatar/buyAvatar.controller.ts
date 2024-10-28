@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Param, Put, Delete} from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Put, Delete, ParseIntPipe} from '@nestjs/common';
 import { BuyAvatarService } from './buyAvatar.service';
 import { CreateBuyAvatarDto } from './dto/create-buyAvatar.dto';
 import { UpdateBuyAvatarDto } from './dto/update-buyAvatar.dto';
@@ -15,6 +15,11 @@ export class BuyAvatarController {
   @Get()
   findAll() {
     return this.buyAvatarService.findAll();
+  }
+
+  @Get(':id')
+  findBuyAvatarById(@Param('id',ParseIntPipe) id: number) {
+    return this.buyAvatarService.findBuyAvatarById(id);
   }
 
   @Put(':id')

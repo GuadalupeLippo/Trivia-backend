@@ -8,7 +8,7 @@ export class CategoryController {
   constructor(private readonly categoryService: CategoryService) {}
 
   @Post()
-  create(@Body() createCategoryDto: CreateCategoryDto) {
+  async create(@Body() createCategoryDto: CreateCategoryDto) {
     return this.categoryService.createOne(createCategoryDto);
   }
 
@@ -27,18 +27,18 @@ export class CategoryController {
 
 
   @Get()
-  findAll() {
-    return this.categoryService.findAll();
+  async findAll() {
+    return await this.categoryService.findAll();
   }
 
 
   @Patch(':id')
-  updateCategory(@Param('id',ParseIntPipe) id: string, @Body() updateCategoryDto: UpdateCategoryDto) {
-    return this.categoryService.updateCategory(+id, updateCategoryDto);
+  async updateCategory(@Param('id',ParseIntPipe) id: number, @Body() updateCategoryDto: UpdateCategoryDto) {
+    return await this.categoryService.updateCategory(+id, updateCategoryDto);
   }
 
   @Delete(':id')
-  removeCategory(@Param('id',ParseIntPipe) id: string) {
-    return this.categoryService.removeCategory(+id);
+  async removeCategory(@Param('id',ParseIntPipe) id: number) {
+    return await this.categoryService.removeCategory(+id);
   }
 }

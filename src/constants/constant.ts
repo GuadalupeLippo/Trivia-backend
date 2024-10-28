@@ -8,4 +8,6 @@ export const questionRepository: string = 'QUESTION_REPOSITORY';
 export const difficultyRepository: string = 'DIFFICULTY_REPOSITORY';
 export const categoryRepository: string = 'CATEGORY_REPOSITORY';
 export const answerRepository : string = 'ANSWER_REPOSITORY';
+export const avatarRepository : string = 'AVATAR_REPOSITORY';
+export const buyAvatarRepository: string = 'BUYAVATAR_REPOSITORY'
 

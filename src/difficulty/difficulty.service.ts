@@ -31,8 +31,15 @@ export class DifficultyService {
       return difficulty;
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} tipoDificult`;
+  async findOneDifficulty(diffId: number): Promise<Difficulty> {
+    try {
+    const difficulty = await this.difficultyRepository.findOne({ where: { id: diffId  },
+      relations:['games'] 
+    });
+    if (!difficulty) throw new NotFoundException("No difficulty in database");
+      return difficulty
+    } catch {
+        throw new NotFoundException("No difficulty in database")}
   }
 
   async update(id: number, updateDifficultyDto: UpdateDifficultyDto) {

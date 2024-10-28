@@ -6,6 +6,7 @@ import { Player } from 'src/player/entities/player.entity';
 import { Score } from 'src/score/entities/score.entity';
 import { Repository } from 'typeorm';
 import { buyScoreRepository, playerRepository, scoreRepository} from 'src/constants/constant';
+import { error } from 'console';
 
 @Injectable()
 export class BuyScoreService {
@@ -18,8 +19,27 @@ export class BuyScoreService {
     private playerRepository: Repository<Player>
   ) {}
 
-  create(createBuyScoreDto: CreateBuyScoreDto) {
-    return 'This action adds a new buyScore';
+  async createBuyScore(createBuyScoreDto: CreateBuyScoreDto): Promise<BuyScore> {
+    try{
+    const player = await this.playerRepository.findOne({ where: { id: createBuyScoreDto.playerId } });
+    if (!player) {
+      throw new NotFoundException('Player not found');
+    }
+    const score = await this.scoreRepository.findOne({ where: { id: createBuyScoreDto.scoreId }});
+    if (!score) {
+      throw new NotFoundException('Score not found');
+    }
+    
+
+    const newBuyScore = this.buyScoreRepository.create({
+      score,
+      player
+    });
+
+    return await this.buyScoreRepository.save(newBuyScore);
+  } catch (err) {
+    throw new Error(err.message('purchased coul not be made'))
+  }
   }
 
  
@@ -30,9 +50,16 @@ export class BuyScoreService {
   
   }
   
-
-  findOne(id: number) {
-    return `This action returns a #${id} buyScore`;
+  async findBuyScoreById(buyScoreId: number): Promise<BuyScore> {
+    try {
+    const buyScore = await this.buyScoreRepository.findOne({ where: { id: buyScoreId  },
+      relations:['score',
+        'player'
+      ] });
+    if (!buyScore) throw new NotFoundException("No purchase of point in database");
+      return buyScore
+    } catch {
+        throw new NotFoundException("No purchase of point in database")}
   }
 
   async updateOne(id: number, UpdateBuyScoreDto: UpdateBuyScoreDto): Promise<BuyScore> {
