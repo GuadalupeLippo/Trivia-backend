@@ -36,6 +36,7 @@ export class AvatarsService {
     if (!avatar) throw new NotFoundException(`Avatar with id ${id} not found`);
     await this.avatarRepository.remove(avatar);
   }
+  
 }
 
 

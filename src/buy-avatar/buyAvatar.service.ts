@@ -81,4 +81,5 @@ async deleteOne(id: number): Promise<void> {
 
   await this.buyAvatarRepository.remove(buyAvatar);
 }
+
 }

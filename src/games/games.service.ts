@@ -75,10 +75,11 @@ export class GamesService {
     return `This action updates a #${id} game`;
   }
 
-  async removeGames(id: number) : Promise<String> {
+  async removeGames(id: number): Promise<String> {
     const game = await this.gameRepository.findOne({ where: { id } });
     if (!game) throw new NotFoundException(`Game with id ${id} not found`);
     await this.gameRepository.remove(game);
     return `Game with ${id} deleted`;
   }
+  
 }
