@@ -35,8 +35,34 @@ export class BuyScoreService {
     return `This action returns a #${id} buyScore`;
   }
 
-  update(id: number, updateBuyScoreDto: UpdateBuyScoreDto) {
-    return `This action updates a #${id} buyScore`;
+  async updateOne(id: number, UpdateBuyScoreDto: UpdateBuyScoreDto): Promise<BuyScore> {
+    const { scoreId, playerId } = UpdateBuyScoreDto;
+  
+    const buyScore = await this.buyScoreRepository.findOne({
+      where: { id },
+      relations: ["score", "player"],  
+    });
+    if (!buyScore) {
+      throw new NotFoundException(`BuyScore with ID ${id} not found`);
+    }
+  
+    if (scoreId) {
+      const score = await this.scoreRepository.findOne({ where: { id: scoreId } });
+      if (!score) {
+        throw new NotFoundException(`Score with ID ${scoreId} not found`);
+      }
+      buyScore.score = score;
+    }
+  
+    if (playerId) {
+      const player = await this.playerRepository.findOne({ where: { id: playerId } });
+      if (!player) {
+        throw new NotFoundException(`Player with ID ${playerId} not found`);
+      }
+      buyScore.player = player;
+    }
+  
+    return await this.buyScoreRepository.save(buyScore);
   }
 
   async remove(id: number): Promise<void> {

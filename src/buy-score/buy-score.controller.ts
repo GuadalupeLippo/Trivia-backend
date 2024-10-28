@@ -24,7 +24,7 @@ export class BuyScoreController {
 
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateBuyScoreDto: UpdateBuyScoreDto) {
-    return this.buyScoreService.update(+id, updateBuyScoreDto);
+    return this.buyScoreService.updateOne(+id, updateBuyScoreDto);
   }
 
   @Delete(':id')

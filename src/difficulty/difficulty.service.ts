@@ -35,8 +35,13 @@ export class DifficultyService {
     return `This action returns a #${id} tipoDificult`;
   }
 
-  update(id: number, updateTipoDificultDto: UpdateDifficultyDto) {
-    return `This action updates a #${id} tipoDificult`;
+  async update(id: number, updateDifficultyDto: UpdateDifficultyDto) {
+    const difficulty = await this.difficultyRepository.preload({
+      id: id,
+      ...updateDifficultyDto
+    })
+    if (!difficulty) throw new NotFoundException(`Difficulty with id ${id} not found`)
+    return await this.difficultyRepository.save(difficulty)
   }
 
   async remove(id: number): Promise<void> {
