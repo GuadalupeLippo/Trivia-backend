@@ -39,7 +39,12 @@ export class BuyScoreService {
     return `This action updates a #${id} buyScore`;
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} buyScore`;
+  async remove(id: number): Promise<void> {
+    const buyScore = await this.buyScoreRepository.findOne({ where: { id } });
+    if (!buyScore) {
+      throw new NotFoundException(`BuyScore with ID ${id} not found`);
+    }
+    await this.buyScoreRepository.remove(buyScore);
   }
+  
 }

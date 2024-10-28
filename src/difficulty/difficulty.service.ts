@@ -1,4 +1,4 @@
-import { Inject, Injectable, NotAcceptableException } from '@nestjs/common';
+import { Inject, Injectable, NotAcceptableException, NotFoundException } from '@nestjs/common';
 
 import { UpdateDifficultyDto } from './dto/update-tipo-dificult.dto';
 
@@ -39,7 +39,12 @@ export class DifficultyService {
     return `This action updates a #${id} tipoDificult`;
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} tipoDificult`;
+  async remove(id: number): Promise<void> {
+    const difficulty = await this.difficultyRepository.findOne({ where: { id } });
+    if (!difficulty) {
+        throw new NotFoundException(`Difficulty with id ${id} not found`);
+    }
+    await this.difficultyRepository.remove(difficulty);
   }
+  
 }
