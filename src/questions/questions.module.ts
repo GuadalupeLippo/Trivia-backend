@@ -5,7 +5,6 @@ import { questionProviders } from './questions.providers';
 import { DatabaseModule } from 'src/database/database.module';
 import { categoryProviders } from 'src/category/category.providers';
 import { answerProviders } from 'src/answer/answer.providers';
-import { CategoryService } from 'src/category/category.service';
 
 @Module({
   imports: [DatabaseModule],
@@ -13,8 +12,6 @@ import { CategoryService } from 'src/category/category.service';
   providers: [...questionProviders,
     QuestionsService,
     ...categoryProviders,
-  ...answerProviders,
-CategoryService],
-exports: [QuestionsService]
+  ...answerProviders],
 })
 export class QuestionsModule {}

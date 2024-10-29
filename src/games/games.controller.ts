@@ -19,15 +19,16 @@ export class GamesController {
   findOne(@Param('id') id: string) {
     return this.gamesService.findOne(+id);
   }
-
   @Post('/trivia-categoria')
   async createGame(@Body() createGameDto: CreateGameDto): Promise<Game> {
     return this.gamesService.createGame(createGameDto);
   }
+
   @Post('/trivia-random')
   async createRandomGame(@Body() createGameDto: CreateGameDto): Promise<Game> {
     return this.gamesService.createRandomGame(createGameDto);
   }
+
 
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateGameDto: UpdateGameDto) {

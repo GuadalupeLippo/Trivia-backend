@@ -15,6 +15,7 @@ import { Question } from 'src/questions/entities/question.entity';
 import { CategoryService} from 'src/category/category.service';
 import { QuestionsService } from 'src/questions/questions.service';
 
+
 @Injectable()
 export class GamesService {
   @Inject(gameRepository)
@@ -30,7 +31,7 @@ export class GamesService {
   constructor(private readonly categoryService: CategoryService,
     private readonly questionService : QuestionsService
   ) {};
- 
+
 
   async createGame(createGameDto: CreateGameDto): Promise<Game> {
     const player = await this.playerRepository.findOne({ where: { id: createGameDto.playerId } });
@@ -64,6 +65,7 @@ export class GamesService {
   }
 
 
+  
   async createRandomGame(createGameDto: CreateGameDto): Promise<Game> {
     const player = await this.playerRepository.findOne({ where: { id: createGameDto.playerId } });
     if (!player) {
@@ -91,7 +93,6 @@ export class GamesService {
     return await this.gameRepository.save(newRandomGame);
   }
 
-  
 
 
   async findAllGames(): Promise<Game[]> {

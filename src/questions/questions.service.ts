@@ -20,7 +20,7 @@ export class QuestionsService {
   @Inject(categoryRepository)
     private categoryRepository: Repository<Category>
   @Inject(answerRepository)
-    private answerRepository : Repository<Answer>
+  private answerRepository : Repository<Answer>
   constructor(private categoryService: CategoryService
   ){}
 
