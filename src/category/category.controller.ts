@@ -14,10 +14,11 @@ export class CategoryController {
 
   //este endpoint es el que va a traer solo 50 preguntas mas alla de las que haya cargadas
   @Get(':id')
-  async getCategoryByIdWithQuestions(@Param('id',ParseIntPipe) id: number) {
-      const categoryWithQuestion = await this.categoryService.getCategoryByIdWithQuestionRandom(id);
-      return categoryWithQuestion;
+  async getCategoryByIdWhitQuestionsRandom(@Param('id',ParseIntPipe) id: number) {
+      const category = await this.categoryService.getCategoryByIdWithQuestionRandom(id);
+      return category
   } 
+
  //este endpoint nos trae todas las preguntas cargadas
   @Get(':id/allquestions')
   async getCategoryById(@Param('id',ParseIntPipe) id: number) {

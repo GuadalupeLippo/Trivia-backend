@@ -15,7 +15,9 @@ export class Question {
   @ManyToOne(() => Game, game => game.questions)
   game: Game;
 
-  @OneToMany(() => Answer, answer => answer.question, { cascade: true} )
+  @OneToMany(() => Answer, answer => answer.question, { cascade: true, 
+    eager:true
+  } )
   answers: Answer[];
 
   @ManyToOne(() => Category, category => category.question )
