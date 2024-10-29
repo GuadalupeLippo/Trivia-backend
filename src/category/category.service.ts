@@ -15,30 +15,12 @@ export class CategoryService {
     private questionRepository: Repository<Question>
   ){}
 
-  async getCategoryByIdWithQuestionRandom(categoryId: number) : Promise<Category> {
-    try{
-    const category = await this.categoryRepository.findOne({ where: { id: categoryId },
-    relations:['question'] });;
-    if (!category) {
-      throw new Error('Categoría no encontrada');
+  shuffleArray<T>(array: T[]): T[] {
+    for (let i = array.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [array[i], array[j]] = [array[j], array[i]];
     }
-
-    // Obtener las preguntas aleatorias asociadas a esa categoría
-    const questionsRandom = await this.questionRepository
-      .createQueryBuilder("question")
-      .innerJoin("question.category", "category")
-      .where("category.id = :categoryId", { categoryId: categoryId })
-      .orderBy("RAND()")
-      .take(50)
-      .getMany();
-
-    
-    return {
-      ...category,
-      question: questionsRandom,
-    };} catch (err) {
-      throw new NotFoundException(err.message);
-    }
+    return array;
   }
 
   async getCategoryById(categoryId:number){
@@ -63,6 +45,24 @@ export class CategoryService {
   }
 }
 
+async getCategoryByIdWithQuestionRandom(categoryId: number) : Promise<Category> {
+  try{
+  const category = await this.categoryRepository.findOne({ where: { id: categoryId },
+  relations:['question', 'question.answers'] });;
+  if (!category) {
+    throw new Error('Category Not found');
+  }
+
+  const randomQuestionsWithAnswers = this.shuffleArray(category.question).slice(0, 51);
+  
+  return {
+    ...category,
+    question: randomQuestionsWithAnswers,
+  };
+  } catch (err) {
+    throw new NotFoundException(err.message);
+  }
+} 
 
   async createOne(createcategoryDto: CreateCategoryDto): Promise<Category> {
     const category = this.categoryRepository.create(createcategoryDto)

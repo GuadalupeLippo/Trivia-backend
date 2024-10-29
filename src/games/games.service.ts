@@ -12,6 +12,9 @@ import { playerRepository } from 'src/constants/constant';
 import { Repository, In } from 'typeorm';
 import { Game } from './entities/game.entity';
 import { Question } from 'src/questions/entities/question.entity';
+import { CategoryService} from 'src/category/category.service';
+import { QuestionsService } from 'src/questions/questions.service';
+
 
 @Injectable()
 export class GamesService {
@@ -25,15 +28,17 @@ export class GamesService {
   private difficultyRepository : Repository<Difficulty>;
   @Inject(questionRepository)
   private questionRepository : Repository<Question>;
- 
+  constructor(private readonly categoryService: CategoryService,
+    private readonly questionService : QuestionsService
+  ) {};
+
 
   async createGame(createGameDto: CreateGameDto): Promise<Game> {
     const player = await this.playerRepository.findOne({ where: { id: createGameDto.playerId } });
     if (!player) {
       throw new NotFoundException('Player not found');
     }
-    const category = await this.categoryRepository.findOne({ where: { id: createGameDto.categoryId },
-    relations : ['question', 'question.answers']});
+    const category = await this.categoryService.getCategoryByIdWithQuestionRandom(createGameDto.categoryId)
     if (!category) {
       throw new NotFoundException('Category not found');
     }
@@ -43,6 +48,7 @@ export class GamesService {
     }
 
     const questions = category.question;
+
     if (!questions) {
       throw new NotFoundException('Question not found');
     }
@@ -57,7 +63,38 @@ export class GamesService {
 
     return await this.gameRepository.save(game);
   }
+
+
   
+  async createRandomGame(createGameDto: CreateGameDto): Promise<Game> {
+    const player = await this.playerRepository.findOne({ where: { id: createGameDto.playerId } });
+    if (!player) {
+      throw new NotFoundException('Player not found');
+    }
+ 
+    const difficulty = await this.difficultyRepository.findOne({ where: { id: createGameDto.difficultyId } });
+    if (!difficulty) {
+      throw new NotFoundException('Difficulty not found');
+    }
+
+    const questionsRandom = await this.questionService.getRandomQuestions()
+
+    if (!questionsRandom) {
+      throw new NotFoundException('Questions not found');
+    }
+
+    const newRandomGame = this.gameRepository.create({
+      player,
+      difficulty,
+      questions: questionsRandom
+     
+    });
+
+    return await this.gameRepository.save(newRandomGame);
+  }
+
+
+
   async findAllGames(): Promise<Game[]> {
     const games = await this.gameRepository.find({ relations: ['player',
       'category',

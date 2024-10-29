@@ -11,16 +11,17 @@ import { answerRepository, categoryRepository,
 import { Category } from 'src/category/entities/category.entity';
 import { Answer } from 'src/answer/entities/answer.entity';
 import { CreateAnswerDto } from 'src/answer/dto/create-answer.dto';
+import { CategoryService } from 'src/category/category.service';
 
 @Injectable()
 export class QuestionsService {
-  constructor(@Inject(questionRepository)
-    private questionRepository: Repository<Question>,
-    @Inject(categoryRepository)
-    private categoryRepository: Repository<Category>,
+  @Inject(questionRepository)
+    private questionRepository: Repository<Question>
+  @Inject(categoryRepository)
+    private categoryRepository: Repository<Category>
   @Inject(answerRepository)
   private answerRepository : Repository<Answer>
-
+  constructor(private categoryService: CategoryService
   ){}
 
   async createMultipleQuestionsWithAnswers(createQuestionsDto: CreateQuestionDto[]): Promise<Question[]> {
@@ -68,11 +69,12 @@ export class QuestionsService {
 
   async getRandomQuestions() {
     try{
-      const randomQuestions = await this.questionRepository
-        .createQueryBuilder("question")
-        .orderBy("RAND()")
-        .take(50)
-        .getMany();
+      const questions = await this.questionRepository.find({
+        relations:['answers'] });;
+        if (!questions) {
+          throw new Error('question Not found')};
+
+      const randomQuestions = this.categoryService.shuffleArray(questions).slice(1,51)
 
       return randomQuestions;
     } catch (err) {

@@ -7,6 +7,9 @@ import { categoryProviders } from 'src/category/category.providers';
 import { difficultyProviders } from 'src/difficulty/difficulty.providers';
 import { gameProviders } from './games.providers';
 import { questionProviders } from 'src/questions/questions.providers';
+import { CategoryService } from 'src/category/category.service';
+import { QuestionsService } from 'src/questions/questions.service';
+import { answerProviders } from 'src/answer/answer.providers';
 
 
 @Module({
@@ -17,7 +20,10 @@ import { questionProviders } from 'src/questions/questions.providers';
     ...categoryProviders,
     ...difficultyProviders,
     ...questionProviders,
-    ...gameProviders
+    ...gameProviders,
+    ...answerProviders,
+    CategoryService,
+    QuestionsService
 
   ],
 })
