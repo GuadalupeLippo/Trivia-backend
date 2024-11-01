@@ -39,9 +39,15 @@ export class PlayerService {
   }
   
 
-  updatePlayer(id: number, updatePlayerDto: UpdatePlayerDto) {
-    return `This action updates a #${id} player`;
+  async updatePlayer(id: number, updatePlayerDto: UpdatePlayerDto) {
+    const player = await this.playerRepository.preload({
+      id: id,
+      ...updatePlayerDto
+    })
+    if (!player) throw new NotFoundException(`Player with id ${id} not found`)
+    return await this.playerRepository.save(player)
   }
+
 
   async deletePlayer(id: number): Promise <String> {
     const player = await this.playerRepository.findOne({ where: { id } });
