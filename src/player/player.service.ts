@@ -54,4 +54,6 @@ export class PlayerService {
     if (!player) throw new NotFoundException(`player with id ${id} not found`);
     await this.playerRepository.remove(player)
     return 'player Deleted'}
+
+    
 }
