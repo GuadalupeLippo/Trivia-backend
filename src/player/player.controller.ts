@@ -2,14 +2,16 @@ import { Controller,
   Get,
   Body,
   Patch, 
-  Param, 
+  Param,
+  Post, 
   Delete, 
-  UseGuards, Req } from '@nestjs/common';
+  UseGuards, Req, 
+  Request} from '@nestjs/common';
 import { PlayerService } from './player.service';
 import { UpdatePlayerDto } from './dto/update-player.dto';
 import { Player } from './entities/player.entity';
 import { AuthGuard } from 'src/auth/auth.guard';
-import { request } from 'http';
+
 
 @Controller('player')
 export class PlayerController {
@@ -22,21 +24,20 @@ export class PlayerController {
     return await this.playerService.getAuthenticatedPlayer(playerId);
 
   }
-  
-
 
   @Get()
   async getAllPlayers(): Promise<Player[]> {
-    return this.playerService.findAllPlayers();
+    return await this.playerService.findAllPlayers();
   }
 
   @Patch(':id')
-  updatePlayer(@Param('id') id: string, @Body() updatePlayerDto: UpdatePlayerDto) {
-    return this.playerService.updatePlayer(+id, updatePlayerDto);
+  async updatePlayer(@Param('id') id: string, @Body() updatePlayerDto: UpdatePlayerDto) {
+    return await this.playerService.updatePlayer(+id, updatePlayerDto);
   }
 
   @Delete(':id')
-  deletePlayer(@Param('id') id: string) {
-    return this.playerService.deletePlayer(+id);
+  async deletePlayer(@Param('id') id: string) {
+    return await this.playerService.deletePlayer(+id);
   }
+  
 }

@@ -43,11 +43,11 @@ export class AuthService {
             const {password, id, ...rest} = newUser;
 
             const payload = { 
-                sub: newPlayer.id, // o player.id si es más apropiado
+                sub: newPlayer.id,
                 userName: newPlayer.user.name,
                 email: newPlayer.user.email,
             };
-            const access_token = await this.jwtService.signAsync(payload); // Genera el token
+            const access_token = await this.jwtService.signAsync(payload); 
 
              return {
                 message: "Registro exitoso",
