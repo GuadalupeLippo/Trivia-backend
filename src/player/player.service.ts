@@ -55,5 +55,21 @@ export class PlayerService {
     await this.playerRepository.remove(player)
     return 'player Deleted'}
 
-    
-}
+    async addBonusPoints(playerId: number, bonusPoints: number): Promise<Player> {
+      console.log("Puntos de bonificación:", bonusPoints);
+      const player = await this.playerRepository.findOne(
+        { where: { id: playerId }}
+      );
+      if (!player) {
+        throw new Error('Player not found');
+      }
+      player.score += bonusPoints;
+      console.log("Nuevo puntaje:", player.score);   
+
+      const savedPlayer = await this.playerRepository.save(player); // Guarda y devuelve el jugador actualizado
+     
+      return savedPlayer
+      }
+
+  }
+
