@@ -25,6 +25,14 @@ export class PlayerController {
 
   }
 
+  @UseGuards(AuthGuard)
+  @Post('bonus')
+  async addBonusPoints(@Request() req: any, @Body() body: { bonusPoints: number }) {
+    const playerId = req.user.sub;
+    const updatedPlayer = await this.playerService.addBonusPoints(playerId, body.bonusPoints);
+    return updatedPlayer; // Devolver el jugador actualizado
+  }
+
   @Get()
   async getAllPlayers(): Promise<Player[]> {
     return await this.playerService.findAllPlayers();
