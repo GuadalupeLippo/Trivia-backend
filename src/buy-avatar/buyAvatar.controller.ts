@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Param, Put, Delete, ParseIntPipe} from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Put, Delete,ConflictException, ParseIntPipe} from '@nestjs/common';
 import { BuyAvatarService } from './buyAvatar.service';
 import { CreateBuyAvatarDto } from './dto/create-buyAvatar.dto';
 import { UpdateBuyAvatarDto } from './dto/update-buyAvatar.dto';
@@ -7,15 +7,28 @@ import { UpdateBuyAvatarDto } from './dto/update-buyAvatar.dto';
 export class BuyAvatarController {
   constructor(private readonly buyAvatarService: BuyAvatarService) {}
 
-  @Post()
-  create(@Body() createBuyAvatarDto: CreateBuyAvatarDto) {
-    return this.buyAvatarService.createOne(createBuyAvatarDto);
+@Post()
+async create(@Body() createBuyAvatarDto: CreateBuyAvatarDto) {
+  try {
+    return await this.buyAvatarService.createOne(createBuyAvatarDto);
+  } catch (error) {
+    if (error instanceof ConflictException) {
+      throw new ConflictException(error.message);
+    }
+    throw error;
   }
+}
+
 
   @Get()
   findAll() {
     return this.buyAvatarService.findAll();
   }
+
+  @Get('user/:userId')
+findByUserId(@Param('userId', ParseIntPipe) userId: number) {
+  return this.buyAvatarService.findByUserId(userId);
+}
 
   @Get(':id')
   findBuyAvatarById(@Param('id',ParseIntPipe) id: number) {
