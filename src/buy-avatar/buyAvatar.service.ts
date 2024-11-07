@@ -1,4 +1,4 @@
-import { Injectable, Inject, NotFoundException } from '@nestjs/common';
+import { Injectable, Inject, NotFoundException, ConflictException } from '@nestjs/common';
 import { CreateBuyAvatarDto } from './dto/create-buyAvatar.dto';
 import { UpdateBuyAvatarDto } from './dto/update-buyAvatar.dto';
 import { BuyAvatar } from './entities/buyAvatar.entity';
@@ -39,7 +39,6 @@ async findBuyAvatarById(buyAvatarId: number): Promise<BuyAvatar> {
  
 
 }
-
 async createOne(createBuyAvatarDto: CreateBuyAvatarDto): Promise<BuyAvatar> {
   const { avatarId, playerId } = createBuyAvatarDto;
 
@@ -49,15 +48,34 @@ async createOne(createBuyAvatarDto: CreateBuyAvatarDto): Promise<BuyAvatar> {
   }
 
   const player = await this.playerRepository.findOne({ where: { id: playerId } });
-    if (!player) {
-      throw new NotFoundException(`Player with ID ${playerId} not found`);
-    }
+  if (!player) {
+    throw new NotFoundException(`Player with ID ${playerId} not found`);
+  }
 
+  const existingPurchase = await this.buyAvatarRepository.findOne({
+    where: {
+      purchasedAvatar: { id: avatarId },
+      player: { id: playerId }
+    },
+    relations: ['purchasedAvatar', 'player']
+  });
+
+  if (existingPurchase) {
+    throw new ConflictException(`The player with ID ${playerId} has already purchased this avatar.`);
+  }
+  
   const buyAvatar = new BuyAvatar();
   buyAvatar.purchasedAvatar = avatar;
-  buyAvatar.player = player;  
+  buyAvatar.player = player;
+
+  // Restar los puntos del jugador
+  player.score -= avatar.price;
+  await this.playerRepository.save(player); // Guardar los puntos actualizados en la base de datos
+
+  // Guardar la compra en la base de datos
   return await this.buyAvatarRepository.save(buyAvatar);
 }
+
 
 async updateOne(id: number, updateBuyAvatarDto: UpdateBuyAvatarDto): Promise<BuyAvatar> {
   const { avatarId, playerId } = updateBuyAvatarDto;
@@ -96,6 +114,13 @@ async deleteOne(id: number): Promise<void> {
   }
 
   await this.buyAvatarRepository.remove(buyAvatar);
+}
+
+async findByUserId(userId: number): Promise<BuyAvatar[]> {
+  return await this.buyAvatarRepository.find({
+    where: { player: {id:userId} },
+    relations: ['purchasedAvatar'], 
+  });
 }
 
 }
