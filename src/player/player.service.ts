@@ -39,16 +39,25 @@ export class PlayerService {
   }
   
 
-  async updatePlayer(id: number, updatePlayerDto: UpdatePlayerDto) {
+  async updatePlayer(id: number, updatePlayerDto: UpdatePlayerDto) : Promise<Player> {
     const player = await this.playerRepository.preload({
       id: id,
       ...updatePlayerDto
     })
     if (!player) throw new NotFoundException(`Player with id ${id} not found`)
+  
     return await this.playerRepository.save(player)
   }
 
-
+  async updateScore(playerId: number, totalScore: number): Promise<Player> {
+    const player = await this.playerRepository.findOne({ where: { id: playerId } });
+    if (!player) {
+      throw new Error('Jugador no encontrado');
+    }
+    player.score += totalScore;
+    return await this.playerRepository.save(player);
+  }
+  
   async deletePlayer(id: number): Promise <String> {
     const player = await this.playerRepository.findOne({ where: { id } });
     if (!player) throw new NotFoundException(`player with id ${id} not found`);
@@ -66,7 +75,7 @@ export class PlayerService {
       player.score += bonusPoints;
       console.log("Nuevo puntaje:", player.score);   
 
-      const savedPlayer = await this.playerRepository.save(player); // Guarda y devuelve el jugador actualizado
+      const savedPlayer = await this.playerRepository.save(player);
      
       return savedPlayer
       }

@@ -45,24 +45,29 @@ export class CategoryService {
   }
 }
 
-async getCategoryByIdWithQuestionRandom(categoryId: number) : Promise<Category> {
-  try{
-  const category = await this.categoryRepository.findOne({ where: { id: categoryId },
-  relations:['question', 'question.answers'] });;
-  if (!category) {
-    throw new Error('Category Not found');
-  }
+async getCategoryByIdWithQuestionRandom(categoryId: number): Promise<Category> {
+  try {
+      const category = await this.categoryRepository.createQueryBuilder("category")
+          .leftJoinAndSelect("category.question", "question")
+          .leftJoinAndSelect("question.answers", "answers")
+          .loadRelationCountAndMap("category.gameCount", "category.game")
+          .where("category.id = :id", { id: categoryId })
+          .getOne();
 
-  const randomQuestionsWithAnswers = this.shuffleArray(category.question).slice(0, 51);
-  
-  return {
-    ...category,
-    question: randomQuestionsWithAnswers,
-  };
+      if (!category) {
+          throw new Error('Category Not found');
+      }
+
+      const randomQuestionsWithAnswers = this.shuffleArray(category.question).slice(0, 51);
+
+      return {
+          ...category,
+          question: randomQuestionsWithAnswers,
+      };
   } catch (err) {
-    throw new NotFoundException(err.message);
+      throw new NotFoundException(err.message);
   }
-} 
+}
 
   async createOne(createcategoryDto: CreateCategoryDto): Promise<Category> {
     const category = this.categoryRepository.create(createcategoryDto)
@@ -70,13 +75,13 @@ async getCategoryByIdWithQuestionRandom(categoryId: number) : Promise<Category> 
   }
   
   async findAll(): Promise<Category[]> {
-    const categories = await this.categoryRepository.find({
-      relations: ['question',
-        'game'
-      ]
-    })
-    if (!categories.length) throw new NotFoundException("No categories in database")
-    return categories
+    const category = await this.categoryRepository.createQueryBuilder("category")
+    .leftJoinAndSelect("category.question", "question")
+    .leftJoinAndSelect("question.answers", "answers")
+    .loadRelationCountAndMap("category.gameCount", "category.game")
+    .getMany();
+    if (!category.length) throw new NotFoundException("No categories in database")
+    return category
   }
 
   async updateCategory(id: number, updatecategoryDto: UpdateCategoryDto) {

@@ -16,12 +16,22 @@ export class GamesController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.gamesService.findOne(+id);
+  async findOneGame(@Param('id') id: number) {
+    return await this.gamesService.findOneGame(+id);
   }
   @Post('/trivia-categoria')
-  async createGame(@Body() createGameDto: CreateGameDto): Promise<Game> {
-    return this.gamesService.createGame(createGameDto);
+  async createGame(@Body() createGameDto: CreateGameDto) {
+    const game=  this.gamesService.createGame(createGameDto);
+    return {
+      id: (await game).id,
+      category: (await game).category,
+      difficulty: (await game).difficulty,
+      questions: (await game).questions,
+      player: {
+          id: (await game).player.id,
+          score: (await game).player.score 
+      }
+  };
   }
 
   @Post('/trivia-random')
@@ -29,14 +39,16 @@ export class GamesController {
     return this.gamesService.createRandomGame(createGameDto);
   }
 
-
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateGameDto: UpdateGameDto) {
-    return this.gamesService.update(+id, updateGameDto);
+  @Patch(':id/total-score')
+  async updateTotalScore(
+    @Param('id') gameId: number, 
+    @Body() updateScoreDto: { totalScore: number }
+  ) {
+    return await this.gamesService.updateTotalScore(gameId, updateScoreDto.totalScore);
   }
 
   @Delete(':id')
-  removeGames(@Param('id') id: string) {
-    return this.gamesService.removeGames(+id);
+  async removeGames(@Param('id') id: string) {
+    return await this.gamesService.removeGames(+id);
   }
 }

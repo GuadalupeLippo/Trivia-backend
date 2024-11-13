@@ -18,24 +18,20 @@ export class DifficultyService {
   }
 
   async findAll(): Promise<Difficulty[]> {
-    const difficulty = await this.difficultyRepository.find({
-      where:
-      [
-        { nivel: 'fácil' },
-        { nivel: 'medio' },
-        { nivel: 'difícil' },
-      ],
-      relations:['games']
-    })
+    const difficulty = await this.difficultyRepository.createQueryBuilder("difficulty")
+    .loadRelationCountAndMap("difficulty.gamesCount","difficulty.games")
+    .where("difficulty.nivel IN (:...niveles)", { niveles: ['fácil', 'medio', 'difícil'] })
+    .getMany();
     if(difficulty.length === 0) throw new NotAcceptableException("No difficulty in Database")
       return difficulty;
   }
 
   async findOneDifficulty(diffId: number): Promise<Difficulty> {
     try {
-    const difficulty = await this.difficultyRepository.findOne({ where: { id: diffId  },
-      relations:['games'] 
-    });
+    const difficulty = await this.difficultyRepository.createQueryBuilder("difficulty")
+    .loadRelationCountAndMap("difficulty.gamesCount","difficulty.games")
+    .where("difficulty.id = :id", { id: diffId })
+    .getOne();
     if (!difficulty) throw new NotFoundException("No difficulty in database");
       return difficulty
     } catch {

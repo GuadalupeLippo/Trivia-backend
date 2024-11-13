@@ -9,7 +9,9 @@ export class CreateGameDto {
     categoryId: number;
     @IsInt()
     difficultyId: number;
-
+    @IsInt()
+    @IsOptional() 
+    totalScore?: number;
 
 }
 
