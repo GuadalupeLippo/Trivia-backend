@@ -21,12 +21,12 @@ export class Game {
 
     //relacion partida-categoria: muchas va a ser de un tipo de categoria.
     @ManyToOne(() => Category, category => category.game )
-    @JoinColumn()  // Esto indica que esta entidad posee la clave foránea
+    @JoinColumn()
     category: Category;
 
     //relacion partida-dificultad : una artida va a tener un tipo de dificultad.
     @ManyToOne(() => Difficulty , difficulty  => difficulty.games)
-    @JoinColumn()  // Esto indica que esta entidad posee la clave foránea
+    @JoinColumn()  
     difficulty: Difficulty;
 
     //relacion de la partida con las multiples preguntas

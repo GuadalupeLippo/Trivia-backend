@@ -49,7 +49,7 @@ export class GamesService {
 
     const questions = category.question;
 
-    if (!questions) {
+    if (!questions || questions.length === 0) {
       throw new NotFoundException('Question not found');
     }
 
@@ -104,12 +104,34 @@ export class GamesService {
     return games
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} game`;
+  async findOneGame(gameId: number): Promise<Game> {
+    try {
+    const game = await this.gameRepository.findOne(
+      {where: { id: gameId  }}
+    )
+    if (!game) throw new NotFoundException("No game in database");
+      return game
+    } catch {
+        throw new NotFoundException("No game in database")}
   }
 
-  update(id: number, updateGameDto: UpdateGameDto) {
-    return `This action updates a #${id} game`;
+  async updateTotalScore(gameId: number, totalScore: number): Promise<Game> {
+    try {
+      const game = await this.gameRepository.findOne(
+        {where: { id: gameId  }}
+      );
+      
+      if (!game) {
+        throw new NotFoundException(`Game with id ${gameId} not found`);
+      }
+  
+      game.totalScore = totalScore;
+  
+      return await this.gameRepository.save(game);
+    } catch (error) {
+      console.error("Error al actualizar el puntaje total:", error);
+      throw new NotFoundException("No game in database");
+    }
   }
 
   async removeGames(id: number): Promise<String> {
