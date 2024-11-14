@@ -6,7 +6,15 @@ import { Player } from 'src/player/entities/player.entity';
 import { Score } from 'src/score/entities/score.entity';
 import { Repository } from 'typeorm';
 import { buyScoreRepository, playerRepository, scoreRepository} from 'src/constants/constant';
-import { error } from 'console';
+
+import { MercadoPagoConfig, Preference } from 'mercadopago';
+
+
+const client = new MercadoPagoConfig(
+  { accessToken: process.env.MP_ACCESS_TOKEN }
+);
+
+
 
 @Injectable()
 export class BuyScoreService {
@@ -20,28 +28,44 @@ export class BuyScoreService {
   ) {}
 
   async createBuyScore(createBuyScoreDto: CreateBuyScoreDto): Promise<BuyScore> {
-    try{
-    const player = await this.playerRepository.findOne({ where: { id: createBuyScoreDto.playerId } });
-    if (!player) {
-      throw new NotFoundException('Player not found');
+    try {
+      const player = await this.playerRepository.findOne({ where: { id: createBuyScoreDto.playerId } });
+      if (!player) {
+        throw new NotFoundException('Player not found');
+      }
+
+      const score = await this.scoreRepository.findOne({ where: { id: createBuyScoreDto.scoreId } });
+      if (!score) {
+        throw new NotFoundException('Score not found');
+      }
+
+      const preference = new Preference();
+      preference.items = [
+        {
+          title: `Compra de ${score.points}`, 
+          quantity: 1,
+          unit_price: score.price,
+          currency_id: 'ARS', 
+        },
+      ];
+
+      // ir a la URL de pago
+      const preferenceResponse = await client.preference.create(preference);
+
+      const newBuyScore = this.buyScoreRepository.create({
+        score,
+        player,
+      });
+
+      await this.buyScoreRepository.save(newBuyScore);
+
+      return newBuyScore;
+    } catch (err) {
+      throw new Error(err.message);
     }
-    const score = await this.scoreRepository.findOne({ where: { id: createBuyScoreDto.scoreId }});
-    if (!score) {
-      throw new NotFoundException('Score not found');
-    }
-    
-
-    const newBuyScore = this.buyScoreRepository.create({
-      score,
-      player
-    });
-
-    return await this.buyScoreRepository.save(newBuyScore);
-  } catch (err) {
-    throw new Error(err.message('purchased coul not be made'))
-  }
   }
 
+  
  
     async findAll(): Promise<BuyScore[]> {
       const buyScore = await this.buyScoreRepository.find({ relations: ["score","player"] });
@@ -101,3 +125,4 @@ export class BuyScoreService {
   }
   
 }
+  
