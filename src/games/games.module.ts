@@ -26,5 +26,6 @@ import { answerProviders } from 'src/answer/answer.providers';
     QuestionsService
 
   ],
+  exports: [...gameProviders],
 })
 export class GamesModule {}

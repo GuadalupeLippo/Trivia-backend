@@ -6,10 +6,11 @@ import { playerProviders } from './player.providers';
 import { userProviders } from 'src/user/user.providers';
 import { buyAvatarProviders } from 'src/buy-avatar/buyAvatar.providers';
 import { ConfigModule } from '@nestjs/config';
+import { GamesModule } from 'src/games/games.module';
 
 @Module({
   imports: [DatabaseModule, 
-    ConfigModule
+    ConfigModule,GamesModule
   ],
   controllers: [PlayerController],
   providers: [...playerProviders,
