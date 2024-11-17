@@ -1,15 +1,18 @@
 import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { CreatePlayerDto } from './dto/create-player.dto';
 import { UpdatePlayerDto } from './dto/update-player.dto';
-import { playerRepository } from 'src/constants/constant';
+import { gameRepository, playerRepository } from 'src/constants/constant';
 import { Repository } from 'typeorm';
 import { Player } from './entities/player.entity';
+import { Game } from 'src/games/entities/game.entity';
 
 @Injectable()
 export class PlayerService {
   constructor(
     @Inject(playerRepository)
     private playerRepository: Repository<Player>,
+    @Inject(gameRepository)
+    private gameRepository: Repository<Game>
   ) {}
 
   async findAllPlayers(): Promise<Player[]> {
@@ -79,6 +82,21 @@ export class PlayerService {
      
       return savedPlayer
       }
+      
+      async getTopThreeGames(playerId: number) {
+        const topGames = await this.gameRepository
+          .createQueryBuilder('game')
+          .leftJoinAndSelect('game.category', 'category')
+          .where('game.playerId = :playerId', { playerId })
+          .orderBy('game.totalScore', 'DESC')
+          .take(3)
+          .getMany();
+        return topGames;
+    }
+    
 
-  }
+
+      
+    }
+  
 

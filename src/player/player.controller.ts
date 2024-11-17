@@ -58,12 +58,13 @@ export class PlayerController {
     return updatedPlayer;
   }
   
-
-
-
   @Delete(':id')
   async deletePlayer(@Param('id') id: string) {
     return await this.playerService.deletePlayer(+id);
   }
   
+  @Get(':id/top-games')
+  async getTopGames(@Param('id') id: number) {
+    return this.playerService.getTopThreeGames(id);
+  }
 }
