@@ -13,7 +13,7 @@ export class QuestionsController {
     return  await this.questionsService.getAllQuestions();
   }
 
-  @Get('/:random')
+  @Get('/random')
   async getRandomQuestions() {
     return await this.questionsService.getRandomQuestions();
   }
