@@ -40,11 +40,12 @@ export class GamesController {
   }
 
   @Patch(':id/total-score')
-  async updateTotalScore(
+  async updateTotalScoreAndAnsweredQuestions(
     @Param('id') gameId: number, 
-    @Body() updateScoreDto: { totalScore: number }
+    @Body() updateScoreDto: { totalScore: number,  answeredQuestionsIds: number[] }
   ) {
-    return await this.gamesService.updateTotalScore(gameId, updateScoreDto.totalScore);
+    const { totalScore, answeredQuestionsIds} = updateScoreDto;
+    return await this.gamesService.updateTotalScoreAndAnsweredQuestions(gameId,totalScore,answeredQuestionsIds);
   }
 
   @Delete(':id')

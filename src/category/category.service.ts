@@ -58,7 +58,7 @@ async getCategoryByIdWithQuestionRandom(categoryId: number): Promise<Category> {
           throw new Error('Category Not found');
       }
 
-      const randomQuestionsWithAnswers = this.shuffleArray(category.question).slice(0, 51);
+      const randomQuestionsWithAnswers = this.shuffleArray(category.question).slice(0, 30);
 
       return {
           ...category,

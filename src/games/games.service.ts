@@ -1,4 +1,4 @@
-import { Injectable, Inject, NotFoundException } from '@nestjs/common';
+import { Injectable, Inject, NotFoundException, BadRequestException } from '@nestjs/common';
 import { CreateGameDto } from './dto/create-game.dto';
 import { UpdateGameDto } from './dto/update-game.dto';
 import { Category } from 'src/category/entities/category.entity';
@@ -115,20 +115,39 @@ export class GamesService {
         throw new NotFoundException("No game in database")}
   }
 
-  async updateTotalScore(gameId: number, totalScore: number): Promise<Game> {
+  async updateTotalScoreAndAnsweredQuestions(gameId: number, totalScore: number,  answeredQuestionsIds: number[]): Promise<Game> {
     try {
       const game = await this.gameRepository.findOne(
-        {where: { id: gameId  }}
-      );
+        {where: { id: gameId  },
+        relations: ['questions']
+      });
       
-      if (!game) {
-        throw new NotFoundException(`Game with id ${gameId} not found`);
+      
+      if (!Array.isArray(answeredQuestionsIds)) {
+        return;
+      }
+
+      if (!game.questions || game.questions.length === 0) {
+        game.totalScore = totalScore;
+        return await this.gameRepository.save(game);
       }
   
+
+      const answeredQuestions = game.questions.filter(question => 
+        question.id && answeredQuestionsIds && answeredQuestionsIds.includes(question.id)
+      );
+
+      if (answeredQuestions.length === 0) {
+        throw new BadRequestException('No valid answered questions found.')
+      }
+      
+      game.questions = answeredQuestions;
       game.totalScore = totalScore;
+  
   
       return await this.gameRepository.save(game);
     } catch (error) {
+
       console.error("Error al actualizar el puntaje total:", error);
       throw new NotFoundException("No game in database");
     }

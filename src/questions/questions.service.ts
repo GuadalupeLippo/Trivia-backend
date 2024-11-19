@@ -74,7 +74,7 @@ export class QuestionsService {
         if (!questions) {
           throw new Error('question Not found')};
 
-      const randomQuestions = this.categoryService.shuffleArray(questions).slice(1,51)
+      const randomQuestions = this.categoryService.shuffleArray(questions).slice(0,30)
 
       return randomQuestions;
     } catch (err) {
