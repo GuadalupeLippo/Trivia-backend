@@ -18,6 +18,8 @@ export class QuestionsController {
     return await this.questionsService.getRandomQuestions();
   }
 
+
+
   @Post()
   async createMultipleQuestionWithAnswers(@Body() createQuestionDto: CreateQuestionDto[]) {
     return this.questionsService.createMultipleQuestionsWithAnswers(createQuestionDto);

@@ -5,11 +5,12 @@ import { Category } from 'src/category/entities/category.entity';
 import { Player } from 'src/player/entities/player.entity';
 import { Difficulty}  from 'src/difficulty/entities/difficulty.entity';
 import {categoryRepository,
+  dataSource,
   difficultyRepository, 
   gameRepository,
   questionRepository } from 'src/constants/constant';
 import { playerRepository } from 'src/constants/constant';
-import { Repository, In } from 'typeorm';
+import { Repository, In, DataSource, QueryRunner } from 'typeorm';
 import { Game } from './entities/game.entity';
 import { Question } from 'src/questions/entities/question.entity';
 import { CategoryService} from 'src/category/category.service';
@@ -28,41 +29,56 @@ export class GamesService {
   private difficultyRepository : Repository<Difficulty>;
   @Inject(questionRepository)
   private questionRepository : Repository<Question>;
-  constructor(private readonly categoryService: CategoryService,
-    private readonly questionService : QuestionsService
+  @Inject (dataSource)
+  private readonly dataSource: DataSource
+  constructor(
+    private readonly categoryService: CategoryService,
+    private readonly questionService : QuestionsService,
   ) {};
 
 
   async createGame(createGameDto: CreateGameDto): Promise<Game> {
-    const player = await this.playerRepository.findOne({ where: { id: createGameDto.playerId } });
-    if (!player) {
-      throw new NotFoundException('Player not found');
-    }
-    const category = await this.categoryService.getCategoryByIdWithQuestionRandom(createGameDto.categoryId)
-    if (!category) {
-      throw new NotFoundException('Category not found');
-    }
-    const difficulty = await this.difficultyRepository.findOne({ where: { id: createGameDto.difficultyId } });
-    if (!category) {
-      throw new NotFoundException('Difficulty not found');
-    }
+    const queryRunner: QueryRunner = this.dataSource.createQueryRunner();
 
-    const questions = category.question;
+    await queryRunner.connect();
+    await queryRunner.startTransaction();
 
-    if (!questions || questions.length === 0) {
-      throw new NotFoundException('Question not found');
+    try {
+      const [player, category, difficulty] = await Promise.all([
+        queryRunner.manager.findOne(Player, { where: { id: createGameDto.playerId } }),
+        this.categoryService.getCategoryByIdWithQuestionRandom(createGameDto.categoryId),
+        queryRunner.manager.findOne(Difficulty, { where: { id: createGameDto.difficultyId } }),
+      ]);
+
+      if (!player) throw new NotFoundException('Player not found');
+      if (!category) throw new NotFoundException('Category not found');
+      if (!difficulty) throw new NotFoundException('Difficulty not found');
+
+      const questions = category.question;
+
+      if (!questions || questions.length === 0) {
+        throw new NotFoundException('Question not found');
+      }
+
+      const game = queryRunner.manager.create(Game, {
+        player,
+        category,
+        difficulty,
+        questions,
+      });
+
+      const savedGame = await queryRunner.manager.save(game);
+
+      await queryRunner.commitTransaction();
+      return savedGame;
+    } catch (error) {
+      await queryRunner.rollbackTransaction();
+      throw error;
+    } finally {
+      await queryRunner.release();
     }
-
-    const game = this.gameRepository.create({
-      player,
-      category,
-      difficulty,
-      questions
-     
-    });
-
-    return await this.gameRepository.save(game);
   }
+  
 
 
   

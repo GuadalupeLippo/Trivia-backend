@@ -67,7 +67,9 @@ export class QuestionsService {
       return question;
   }
 
-  async getRandomQuestions() {
+
+
+  async getRandomQuestions() : Promise<Question[]> {
     try{
       const questions = await this.questionRepository.find({
         relations:['answers'] });;
@@ -75,6 +77,12 @@ export class QuestionsService {
           throw new Error('question Not found')};
 
       const randomQuestions = this.categoryService.shuffleArray(questions).slice(0,30)
+      
+
+      if (randomQuestions.length === 0) {
+        throw new Error('Not enough random questions found');
+      }
+  
 
       return randomQuestions;
     } catch (err) {

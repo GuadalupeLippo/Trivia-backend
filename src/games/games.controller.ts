@@ -21,15 +21,15 @@ export class GamesController {
   }
   @Post('/trivia-categoria')
   async createGame(@Body() createGameDto: CreateGameDto) {
-    const game=  this.gamesService.createGame(createGameDto);
+    const game=  await this.gamesService.createGame(createGameDto);
     return {
-      id: (await game).id,
-      category: (await game).category,
-      difficulty: (await game).difficulty,
-      questions: (await game).questions,
+      id: game.id,
+      category: game.category,
+      difficulty: game.difficulty,
+      questions: game.questions,
       player: {
-          id: (await game).player.id,
-          score: (await game).player.score 
+          id: game.player.id,
+          score:  game.player.score 
       }
   };
   }
