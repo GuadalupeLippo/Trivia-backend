@@ -22,18 +22,22 @@ export class MercadoPagoService {
     try {
       const paymentId = notificationData.data.id;
       const payment = await mercadopago.payment.findById(paymentId);
-
+  
       if (payment.body.status === 'approved') {
-        const { description } = payment.body;
-        const points = payment.body.pointsAmount; 
-        const playerId = payment.body.metadata.playerId; 
-
+        const { metadata } = payment.body;
+        const points = metadata?.pointsAmount;
+        const playerId = metadata?.playerId;
+  
         if (playerId && points) {
           await this.playerService.updateScore(playerId, points);
+          console.log(`Se sumaron ${points} puntos al jugador con ID ${playerId}`);
+        } else {
+          console.warn('Faltan datos en el pago aprobado:', metadata);
         }
       }
     } catch (error) {
       console.error('Error al manejar la notificación de pago:', error);
     }
   }
+  
 }
