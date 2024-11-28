@@ -12,6 +12,7 @@ import { QuestionsService } from 'src/questions/questions.service';
 import { answerProviders } from 'src/answer/answer.providers';
 
 
+
 @Module({
   imports:[DatabaseModule],
   controllers: [GamesController],
@@ -23,7 +24,8 @@ import { answerProviders } from 'src/answer/answer.providers';
     ...gameProviders,
     ...answerProviders,
     CategoryService,
-    QuestionsService
+    QuestionsService,
+   
 
   ],
   exports: [...gameProviders],
