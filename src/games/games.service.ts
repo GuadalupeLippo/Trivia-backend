@@ -131,43 +131,38 @@ export class GamesService {
         throw new NotFoundException("No game in database")}
   }
 
-  async updateTotalScoreAndAnsweredQuestions(gameId: number, totalScore: number,  answeredQuestionsIds: number[]): Promise<Game> {
+  async updateTotalScoreAndAnsweredQuestions(
+    gameId: number,
+    totalScore: number,
+    answeredQuestionsIds: number[] = []
+  ): Promise<Game> {
     try {
-      const game = await this.gameRepository.findOne(
-        {where: { id: gameId  },
-        relations: ['questions']
+      const game = await this.gameRepository.findOne({
+        where: { id: gameId },
+        relations: ['questions', 'category']
       });
-      
-      
-      if (!Array.isArray(answeredQuestionsIds)) {
-        return;
-      }
-
-      if (!game.questions || game.questions.length === 0) {
+  
+      if (!game) throw new NotFoundException('Game not found');
+  
+      if (!game.category) { 
         game.totalScore = totalScore;
-        return await this.gameRepository.save(game);
-      }
+      } else {
+        const validQuestions = game.questions.filter(q => 
+          answeredQuestionsIds.includes(q.id)
+        );
   
-
-      const answeredQuestions = game.questions.filter(question => 
-        question.id && answeredQuestionsIds && answeredQuestionsIds.includes(question.id)
-      );
-
-      if (answeredQuestions.length === 0) {
-        throw new BadRequestException('No valid answered questions found.')
+        game.questions = validQuestions.length > 0 ? validQuestions : game.questions;
+        game.totalScore = totalScore;
       }
-      
-      game.questions = answeredQuestions;
-      game.totalScore = totalScore;
-  
   
       return await this.gameRepository.save(game);
     } catch (error) {
-
-      console.error("Error al actualizar el puntaje total:", error);
-      throw new NotFoundException("No game in database");
+      console.error('Error actualizando puntaje:', error);
+      throw error;
     }
   }
+  
+  
 
   async removeGames(id: number): Promise<String> {
     const game = await this.gameRepository.findOne({ where: { id } });
