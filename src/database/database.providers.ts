@@ -12,11 +12,11 @@ export const databaseProviders = [
             // Crea una nueva instancia de DataSource con la configuración especificada
             const dataSource = new DataSource({
                 type: 'mysql',                // Tipo de base de datos (MySQL)
-                host: 'localhost',            // Dirección del host de la base de datos
+                host: 'bva0vvic8nxf39u2qnty-mysql.services.clever-cloud.com',            // Dirección del host de la base de datos
                 port: 3306,                   // Puerto en el que se ejecuta la base de datos
-                username: 'root',             // Nombre de usuario para acceder a la base de datos
-                password: '37380268guada',             // Contraseña para acceder a la base de datos
-                database: 'trivia_ATRV',     // Nombre de la base de datos a la que se conectará
+                username: 'ubkgofzvv0r8ympp',        
+                password: 'WbWJn2lLeBIOSKKuCxRF',            
+                database: 'bva0vvic8nxf39u2qnty',     // Nombre de la base de datos a la que se conectará
                 entities: [
                     __dirname + '/../**/*.entity{.ts,.js}', // Ruta donde se encuentran las entidades
                 ],
