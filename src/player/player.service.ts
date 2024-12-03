@@ -52,12 +52,12 @@ export class PlayerService {
     return await this.playerRepository.save(player)
   }
 
-  async updateScore(playerId: number, totalScore: number): Promise<Player> {
+  async updateScore(playerId: number, points: number): Promise<Player> {
     const player = await this.playerRepository.findOne({ where: { id: playerId } });
     if (!player) {
       throw new Error('Jugador no encontrado');
     }
-    player.score += totalScore;
+    player.score += points;
     return await this.playerRepository.save(player);
   }
   

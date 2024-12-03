@@ -48,13 +48,13 @@ export class PlayerController {
   @Patch(':id/score')
   async addGamePoints(
     @Param('id') playerId: number,              
-    @Body() body: { totalScore: number }
+    @Body() body: { points: number }
   ) {
     if (!playerId) {
       throw new Error('ID de jugador no encontrado en el token de autenticación');
     }
-    const totalScore = body.totalScore;
-    const updatedPlayer = await this.playerService.updateScore(playerId, totalScore);
+    const points = body.points;
+    const updatedPlayer = await this.playerService.updateScore(playerId, points);
     return updatedPlayer;
   }
   

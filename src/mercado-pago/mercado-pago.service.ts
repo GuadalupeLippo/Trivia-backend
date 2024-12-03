@@ -20,41 +20,69 @@ export class MercadoPagoService {
   }
 
   createPreference(preferenceData) {
-    console.log('Datos enviados para crear la preferencia:', preferenceData); // Inspección del payload
+    console.log('Datos enviados para crear la preferencia:', preferenceData);
     return mercadopago.preferences.create(preferenceData);
   }
-
-  async handlePaymentNotification(notificationData: any) {
-    console.log('Notificación recibida:', notificationData); // Log inicial de la notificación
-
-    try {
-      const paymentId = notificationData.data.id;
-      console.log('ID del pago obtenido de la notificación:', paymentId); // Log del ID del pago
-
-      const payment = await mercadopago.payment.findById(paymentId);
-      console.log('Datos del pago recuperados:', payment.body); // Inspección de los datos del pago
-
-      if (payment.body.status === 'approved') {
-        console.log('El pago fue aprobado'); // Confirmación del estado del pago
-
-        const { metadata } = payment.body;
-        console.log('Metadata del pago aprobado:', metadata); // Inspección de los metadatos
-
-        const points = metadata?.pointsAmount;
-        const playerId = metadata?.playerId;
-
-        if (playerId && points) {
-          console.log(`Sumando ${points} puntos al jugador con ID ${playerId}`); // Confirmación de la operación
-          await this.playerService.updateScore(playerId, points);
-          console.log('Puntos sumados exitosamente'); // Confirmación del éxito
-        } else {
-          console.warn('Faltan datos en el pago aprobado:', metadata); // Advertencia en caso de datos incompletos
-        }
-      } else {
-        console.warn('El estado del pago no es "approved":', payment.body.status); // Advertencia si el pago no es aprobado
+  async handlePaymentNotification({ id, topic }: { id: string; topic: string }) {
+    
+  
+    if (topic === 'payment' || topic === 'merchant_order') {
+      const paymentId = Number(id);
+      if (isNaN(paymentId)) {
+        throw new Error(`ID de pago inválido: ${id}`);
       }
-    } catch (error) {
-      console.error('Error al manejar la notificación de pago:', error); // Manejo de errores
+  
+      try {
+        if (topic === 'payment') {
+         
+          const payment = await mercadopago.payment.findById(paymentId);
+          console.log('Datos del pago:', payment.body);
+  
+          if (payment.body.status === 'approved') {
+            const { metadata } = payment.body;
+            const points = metadata?.points_amount;
+            const playerId = metadata?.player_id;
+  
+            playerId && points ? await this.playerService.updateScore(playerId, points) :
+              console.warn('Faltan datos en la metadata del pago');
+
+              return 'approved';
+          } else {
+            console.warn(`El estado del pago no es "approved": ${payment.body.status}`);
+          }
+        } else if (topic === 'merchant_order') {
+  
+          const merchantOrder = await mercadopago.merchant_orders.findById(paymentId);
+          console.log('Datos del merchant_order:', merchantOrder.body);
+  
+          // Aquí podrías realizar la lógica específica para "merchant_order"
+          if (merchantOrder.body.status === 'closed') {
+            const payment = merchantOrder.body.payments.find(p => p.status === 'approved');
+            
+            if (payment) {
+              console.log('Pago aprobado dentro del merchant_order:', payment);
+              // Lógica para procesar el pago aprobado dentro del merchant_order
+              const { metadata } = payment;
+              const points = metadata?.points_amount;
+              const playerId = metadata?.player_id;
+  
+              playerId && points ? await this.playerService.updateScore(playerId, points) :
+                console.warn('Faltan datos en la metadata del pago');
+              
+              console.log('Merchant order aprobado:', merchantOrder.body);
+              return 'approved';
+            } else {
+              console.warn(`El estado del merchant order no es "approved": ${merchantOrder.body.status}`);
+            }
+          }
+        }
+      } catch (error) {
+        console.error('Error al procesar la notificación:', error);
+        throw new Error('Error al procesar la notificación');
+      }
+    } else {
+      console.warn(`Topic no reconocido: ${topic}`);
     }
   }
+  
 }

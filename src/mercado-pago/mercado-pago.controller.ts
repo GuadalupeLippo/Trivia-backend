@@ -1,4 +1,4 @@
-import { Controller, Post, Body, HttpCode, HttpStatus } from '@nestjs/common';
+import { Controller, Post, Body, HttpCode, HttpStatus, Query } from '@nestjs/common';
 import { MercadoPagoService } from './mercado-pago.service';
 
 @Controller('mercadopago')
@@ -20,18 +20,33 @@ export class MercadoPagoController {
     }
   }
 
-  // Endpoint para recibir la notificación de pago (webhook)
-  @Post('/notificacion')
+ 
+ @Post('/notificacions')
   @HttpCode(HttpStatus.OK)
-  async handlePaymentNotification(@Body() notificationData: any) {
-    console.log('Notificación de pago recibida:', notificationData); // Log de los datos recibidos en la notificación
+  async handlePaymentNotification(@Query() query: { id: string; topic: string }) {
+    console.log('Notificación recibida:', query); // Log de los datos recibidos en la notificación
 
-    try {
-      await this.mercadoPagoService.handlePaymentNotification(notificationData);
-      console.log('Notificación de pago procesada exitosamente'); // Confirmación del éxito
-    } catch (error) {
-      console.error('Error al procesar la notificación de pago:', error); // Log en caso de error
-      throw error;
+    if (!query.id || !query.topic) {
+      console.warn('Faltan datos en la notificación: id o topic');
+      return { message: 'Faltan datos en la notificación' };
     }
-  }
+  
+    if (query.topic === 'payment' || query.topic === 'merchant_order') {
+      try {
+        const paymentStatus = await this.mercadoPagoService.handlePaymentNotification({
+          id: query.id,
+          topic: query.topic,
+        });
+        console.log('Notificación procesada exitosamente',paymentStatus);
+        paymentStatus === 'approved'? {message: 'Pago exitoso', success: true } : { message: 'Pago no aprobado', success: false };  
+        
+      } catch (error) {
+        console.error('Error al procesar la notificación de pago:', error);
+        throw error;
+      }
+    } else {
+      console.warn('Tipo de notificación no reconocido:', query.topic);
+      return { message: 'Tipo de notificación no reconocido' };
+    }
+}
 }
